@@ -1,0 +1,53 @@
+{
+  "manifest_version": 2,
+  "name": "Standard Notes Clipper",
+  "description": "Clip content you find on the web and save it to your Standard Notes account",
+  "version": "1.0.0",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "https://sync.standardnotes.org/*"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "background": {
+    "scripts": [
+      "vendor/lodash.min.js",
+      "vendor/regenerator.js",
+      "vendor/sfjs.js",
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "content_security_policy": "script-src 'self' https://sync.standardnotes.org; object-src 'self'",
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ]
+    }
+  ],
+  "browser_action": {
+    "default_title": "Clip to Standard Notes"
+  },
+  "web_accessible_resources": [
+    "content.css",
+    "logo.png"
+  ],
+  "options_ui": {
+    "page": "settings.html",
+    "open_in_tab": true
+  },
+  "applications": {
+    "gecko": {
+      "id": "snclipper@johnjonesfour.com"
+    }
+  }
+}
