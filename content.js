@@ -4,7 +4,7 @@
       startClipper().then(content => {
         sendResponse({
           title: getTitle(),
-          url: getURL(),
+          // url: getURL(),
           text: content
         })
       })

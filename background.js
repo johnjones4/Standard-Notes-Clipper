@@ -122,7 +122,7 @@ const saveClipping = (content, {params, keys}) => {
             created_at: item.created_at
           }
         ],
-        limit: 0
+        limit: 1
       })
     })
     .then(result => {
