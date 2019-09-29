@@ -172,7 +172,7 @@ const syncTags = () => {
       })
   }
   return (() => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       chrome.storage.sync.get({
         keys: null,
         tagSyncToken: null,
@@ -184,7 +184,7 @@ const syncTags = () => {
       return fetchTags(keys, tagSyncToken, null, tags)
     })
     .then(({tags, syncToken}) => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         chrome.storage.sync.set({
           tagSyncToken: syncToken,
           tags: tags
@@ -211,6 +211,6 @@ const checkForUser = () => {
 checkForUser()
   .then(items => {
     if (items.token) {
-      syncTags().then(tags => console.log(tags))
+      syncTags() 
     }
   })

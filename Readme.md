@@ -1,7 +1,8 @@
 # Standard Notes Clipper
 
-This is a browser add-on (Firefox and Chrome) that allows you to clip web pages to your Standard Notes account. The project is just a proof of concept right now, and needs much work. (Which is listed below.) Please use and share your feedback! And, of course, contributions are welcome!
+This is a browser add-on (Firefox and Chrome) that allows you to clip web pages to your Standard Notes account. The add-on let's you select the portion of the page you want to clip. It then adds the HTML content of that selection to your Standard Notes account.
 
+The project is just a proof of concept right now, and needs much work. (Which is listed below.) Please use and share your feedback! And, of course, contributions are welcome!  
 ## Installation
 
 ### Firefox
