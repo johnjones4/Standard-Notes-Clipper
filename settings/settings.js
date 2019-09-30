@@ -1,5 +1,77 @@
+/* global React:readonly ReactDOM:readonly */
+
 const background = chrome.extension.getBackgroundPage()
 const optionsEl = document.getElementById('options')
+
+const FormField = (props) => {
+  return 
+}
+
+class Login extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      email: '',
+      password: ''
+    }
+  }
+
+  ender () {
+    return React.createElement('div', {
+      className: 'container'
+    }, [
+      React.createElement('div', {
+        className: 'row justify-content-md-center'
+      }, [
+        this.renderStateElement()
+      ])
+    ])
+  }
+}
+
+class SettingsPage extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      mode: 'login'
+    }
+  }
+
+  componentDidMount () {
+    chrome.storage.sync.get({
+      token: null,
+      params: null,
+      keys: null
+    }, items => {
+      if (items.token === null || items.params === null || items.keys === null) {
+        this.setState({ mode: 'login' })
+      } else {
+        this.setState({ mode: 'logout' })
+      }
+    })
+  }
+
+  renderStateElement () {
+    return null
+  }
+
+  render () {
+    return React.createElement('div', {
+      className: 'container'
+    }, [
+      React.createElement('div', {
+        className: 'row justify-content-md-center'
+      }, [
+        this.renderStateElement()
+      ])
+    ])
+  }
+}
+
+ReactDOM.render(
+  React.createElement(SettingsPage),
+  document.getElementById('options')
+)
 
 const showLogin = () => {
   const loginFrame = document.createElement('div')
@@ -126,17 +198,7 @@ const makeFormField = (name, type, labelVal, value) => {
 
 const reload = () => {
   clearContent()
-  chrome.storage.sync.get({
-    token: null,
-    params: null,
-    keys: null
-  }, items => {
-    if (items.token === null || items.params === null || items.keys === null) {
-      showLogin()
-    } else {
-      showLoggedIn()
-    }
-  })
+  
 }
 
 document.addEventListener('DOMContentLoaded', () => reload())
