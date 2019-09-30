@@ -1,10 +1,10 @@
-(function() {
-  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+(() => {
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'clip') {
       startClipper().then(content => {
         sendResponse({
           title: getTitle(),
-          // url: getURL(),
+          url: getURL(),
           text: content
         })
       })
@@ -64,7 +64,7 @@
   const matchHoverElement = (hoverEl, el) => {
     const rect = el.getBoundingClientRect()
     const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
-	  const  scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
     hoverEl.style.top = (rect.top + scrollTop) + 'px'
     hoverEl.style.left = (rect.left + scrollLeft) + 'px'
     hoverEl.style.width = rect.width + 'px'
@@ -87,4 +87,4 @@
     hoverEl.style.pointerEvents = 'none'
     return hoverEl
   }
-})();
+})()

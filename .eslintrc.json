@@ -1,0 +1,9 @@
+{
+  "extends": "standard",
+  "globals": {
+    "chrome": "readonly"
+  },
+  "env": {
+    "browser": true
+  }
+}

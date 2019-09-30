@@ -101,7 +101,7 @@ const createError = (message) => {
 const makeFormField = (name, type, labelVal, value) => {
   const formGroup = document.createElement('div')
   formGroup.className = 'form-group'
-  
+
   const label = document.createElement('label')
   label.setAttribute('for', name)
   label.textContent = labelVal

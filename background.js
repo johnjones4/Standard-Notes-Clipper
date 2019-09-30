@@ -1,3 +1,4 @@
+/* global StandardFile:readonly SFItem:readonly */
 const SFJS = new StandardFile()
 
 chrome.browserAction.onClicked.addListener(tab => {
@@ -15,8 +16,8 @@ chrome.browserAction.onClicked.addListener(tab => {
 })
 
 const sendMessagePromise = (tabid, type, payload) => {
-  return new Promise((resolve, _) => {
-    chrome.tabs.sendMessage(tabid, {type, payload}, (response) => {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.sendMessage(tabid, { type, payload }, (response) => {
       resolve(response)
     })
   })
@@ -59,7 +60,7 @@ const snRequest = (auth, path, method, body) => {
     })
 }
 
-const logout = window.logout = () => {
+window.logout = () => {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.set({
       token: null,
@@ -73,7 +74,7 @@ const logout = window.logout = () => {
   })
 }
 
-const login = window.login = (email, password) => {
+window.login = (email, password) => {
   let mk = null
   let ak = null
   let params = null
@@ -90,7 +91,7 @@ const login = window.login = (email, password) => {
         password: keys.pw
       })
     })
-    .then(({token}) => {
+    .then(({ token }) => {
       return new Promise((resolve, reject) => {
         chrome.storage.sync.set({
           token,
@@ -106,14 +107,15 @@ const login = window.login = (email, password) => {
     })
 }
 
-const saveClipping = (content, {params, keys}) => {
+const saveClipping = (content, { params, keys }) => {
   const item = new SFItem({
     content,
     content_type: 'Note',
     created_at: new Date()
   })
   return SFJS.itemTransformer.encryptItem(item, keys, params)
-    .then(({content, enc_item_key}) => {
+    // eslint-disable-next-line camelcase
+    .then(({ content, enc_item_key }) => {
       return snRequest(true, 'items/sync', 'POST', {
         items: [
           {
@@ -180,19 +182,19 @@ const syncTags = () => {
       }, (items) => resolve(items))
     })
   })()
-    .then(({tagSyncToken, tags, keys}) => {
+    .then(({ tagSyncToken, tags, keys }) => {
       return fetchTags(keys, tagSyncToken, null, tags)
     })
-    .then(({tags, syncToken}) => {
+    .then(({ tags, syncToken }) => {
       return new Promise((resolve) => {
         chrome.storage.sync.set({
           tagSyncToken: syncToken,
           tags: tags
-        },() => resolve(tags))
+        }, () => resolve(tags))
       })
     })
 }
-  
+
 const checkForUser = () => {
   return new Promise((resolve) => {
     chrome.storage.sync.get({
@@ -211,6 +213,6 @@ const checkForUser = () => {
 checkForUser()
   .then(items => {
     if (items.token) {
-      syncTags() 
+      syncTags()
     }
   })
