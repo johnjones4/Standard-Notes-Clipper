@@ -23,12 +23,26 @@ const sendMessagePromise = (tabid, type, payload) => {
   })
 }
 
+const chromeSetPromise = (setParams) => {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.set(setParams, () => {
+      resolve()
+    })
+  })
+}
+
+const chromeGetPromise = (getParams) => {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(getParams, items => {
+      resolve(items)
+    })
+  })
+}
+
 const snRequest = (auth, path, method, body) => {
   return (() => {
     if (auth) {
-      return new Promise((resolve, reject) => {
-        chrome.storage.sync.get(['token'], (items) => resolve(items.token))
-      })
+      return chromeGetPromise(['token']).then(items => items.token)
     } else {
       return Promise.resolve(null)
     }
@@ -91,20 +105,14 @@ window.login = (email, password) => {
         password: keys.pw
       })
     })
-    .then(({ token }) => {
-      return new Promise((resolve, reject) => {
-        chrome.storage.sync.set({
-          token,
-          params,
-          keys: {
-            mk,
-            ak
-          }
-        }, () => {
-          resolve()
-        })
-      })
-    })
+    .then(({ token }) => chromeSetPromise({
+      token,
+      params,
+      keys: {
+        mk,
+        ak
+      }
+    }))
 }
 
 const saveClipping = (content, { params, keys }) => {
@@ -134,80 +142,74 @@ const saveClipping = (content, { params, keys }) => {
     })
 }
 
-const syncTags = () => {
-  const fetchTags = (keys, syncToken, cursorToken, tags) => {
-    return snRequest(true, 'items/sync', 'POST', {
-      items: [],
-      sync_token: syncToken,
-      cursor_token: cursorToken
-    })
-      .then(response => {
-        const newTags = []
-        response.retrieved_items.forEach(item => {
-          if (item.content_type === 'Tag') {
-            if (item.deleted) {
-              delete tags[item.uuid]
-            } else {
-              newTags.push(item)
-            }
-          }
-        })
-        return Promise.all(
-          newTags.map(tag => {
-            return SFJS.itemTransformer.decryptItem(tag, keys)
-              .then(() => {
-                const content = JSON.parse(tag.content)
-                tags[tag.uuid] = content.title
-              })
-          })
-        ).then(() => response)
-      })
-      .then(response => {
-        if (response.cursor_token) {
-          return fetchTags(keys, syncToken, response.cursor_token, tags)
-        } else {
-          return {
-            tags,
-            syncToken: response.sync_token
+const fetchTags = (keys, syncToken, cursorToken, tags) => {
+  return snRequest(true, 'items/sync', 'POST', {
+    items: [],
+    sync_token: syncToken,
+    cursor_token: cursorToken
+  })
+    .then(response => {
+      const newTags = []
+      response.retrieved_items.forEach(item => {
+        if (item.content_type === 'Tag') {
+          if (item.deleted) {
+            delete tags[item.uuid]
+          } else {
+            newTags.push(item)
           }
         }
       })
-  }
-  return (() => {
-    return new Promise((resolve) => {
-      chrome.storage.sync.get({
-        keys: null,
-        tagSyncToken: null,
-        tags: {}
-      }, (items) => resolve(items))
+      return Promise.all(
+        newTags.map(tag => {
+          return SFJS.itemTransformer.decryptItem(tag, keys)
+            .then(() => {
+              const content = JSON.parse(tag.content)
+              tags[tag.uuid] = content.title
+            })
+        })
+      ).then(() => response)
     })
-  })()
+    .then(response => {
+      if (response.cursor_token) {
+        return fetchTags(keys, syncToken, response.cursor_token, tags)
+      } else {
+        return {
+          tags,
+          syncToken: response.sync_token
+        }
+      }
+    })
+}
+
+const syncTags = () => {
+  return chromeGetPromise({
+    keys: null,
+    tagSyncToken: null,
+    tags: {}
+  })
     .then(({ tagSyncToken, tags, keys }) => {
       return fetchTags(keys, tagSyncToken, null, tags)
     })
     .then(({ tags, syncToken }) => {
-      return new Promise((resolve) => {
-        chrome.storage.sync.set({
-          tagSyncToken: syncToken,
-          tags: tags
-        }, () => resolve(tags))
-      })
+      return chromeSetPromise({
+        tagSyncToken: syncToken,
+        tags: tags
+      }).then(() => tags)
     })
 }
 
 const checkForUser = () => {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get({
-      token: null,
-      params: null,
-      keys: null
-    }, items => {
+  return chromeGetPromise({
+    token: null,
+    params: null,
+    keys: null
+  })
+    .then(items => {
       if (items.token === null || items.params === null || items.keys === null) {
         return chrome.runtime.openOptionsPage()
       }
-      resolve(items)
+      return items
     })
-  })
 }
 
 checkForUser()
