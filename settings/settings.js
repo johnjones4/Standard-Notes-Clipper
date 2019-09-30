@@ -1,43 +1,81 @@
-/* global React:readonly ReactDOM:readonly */
-
-const background = chrome.extension.getBackgroundPage()
-const optionsEl = document.getElementById('options')
+const { Component, h, render } = window.preact
 
 const FormField = (props) => {
-  return 
+  return h('div', { className: 'form-group'},
+    h('label', { for: props.name }, props.label),
+    h('input', { onChange: (event) => props.onChange(event), required: props.required, name: props.name, id: props.name, type: props.type, placeholder: props.placeholder, className: 'form-control', value: props.value }, props.for)
+  )
 }
 
-class Login extends React.Component {
+class Login extends Component {
   constructor (props) {
     super(props)
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      error: null,
+      loggingIn: false
     }
   }
 
-  ender () {
-    return React.createElement('div', {
-      className: 'container'
-    }, [
-      React.createElement('div', {
-        className: 'row justify-content-md-center'
-      }, [
-        this.renderStateElement()
-      ])
-    ])
+  login (event) {
+    event.preventDefault()
+    this.setState({
+      loggingIn: true
+    })
+    chrome.extension.getBackgroundPage().login(this.state.email, this.state.password)
+      .then(() => this.props.stateChanged())
+      .catch(err => {
+        this.setState({
+          loggingIn: false,
+          error: err.message
+        })
+        console.error(err)
+      })
+    return false
+  }
+
+  render () {
+    return h('div', { className: 'col-lg-5' },
+      h('form', { className: 'card', onSubmit: (event) => this.login(event) },
+        h('div', { className: 'card-body' },
+          h('h1', { className: 'text-center' }, 'Login'),
+          this.state.error ? h('div', { role: 'alert', className: 'alert alert-danger'}, this.state.error) : null,
+          h(FormField, { required: true, name: 'email', label: 'E-mail', type: 'email', value: this.state.email, onChange: (event) => this.setState({email: event.target.value}) }),
+          h(FormField, { required: true,  name: 'password', label: 'Password', type: 'password', value: this.state.password, onChange: (event) => this.setState({password: event.target.value}) }),
+          h('button', {className: 'btn btn-primary btn-block', disabled: this.state.loggingIn, type: 'submit', onClick: (event) => this.login(event)}, 'Login')
+        )
+      )
+    )
   }
 }
 
-class SettingsPage extends React.Component {
+class Logout extends Component {
+  logout () {
+    chrome.extension.getBackgroundPage().logout().then(() => this.props.stateChanged())
+  }
+
+  render () {
+    return h('div', {className: 'text-center'},
+      h('p', {}, 'Logged in to Standard Notes!'),
+      h('button', {className: 'btn btn-primary', onClick: () => this.logout()}, 'Logout')
+    )
+  }
+}
+
+class SettingsPage extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      mode: 'login'
+      mode: null
     }
   }
 
   componentDidMount () {
+    this.checkState()
+  }
+
+  checkState () {
     chrome.storage.sync.get({
       token: null,
       params: null,
@@ -52,153 +90,23 @@ class SettingsPage extends React.Component {
   }
 
   renderStateElement () {
-    return null
+    switch (this.state.mode) {
+      case 'login':
+        return h(Login, { stateChanged: () => this.checkState() })
+      case 'logout':
+        return h(Logout, { stateChanged: () => this.checkState() })
+      default:
+        return null
+    }
   }
 
   render () {
-    return React.createElement('div', {
-      className: 'container'
-    }, [
-      React.createElement('div', {
-        className: 'row justify-content-md-center'
-      }, [
+    return h('div', { className: 'container' },
+      h('div', { className: 'row justify-content-md-center' },
         this.renderStateElement()
-      ])
-    ])
+      )
+    )
   }
 }
 
-ReactDOM.render(
-  React.createElement(SettingsPage),
-  document.getElementById('options')
-)
-
-const showLogin = () => {
-  const loginFrame = document.createElement('div')
-  loginFrame.className = 'col-lg-5'
-
-  const loginCard = document.createElement('form')
-  loginCard.className = 'card'
-  loginFrame.appendChild(loginCard)
-
-  const loginCardInner = document.createElement('div')
-  loginCardInner.className = 'card-body'
-  loginCard.appendChild(loginCardInner)
-
-  loginCardInner.appendChild(makeHeader('Login To Your Account'))
-
-  const placeholder = document.createElement('div')
-  loginCardInner.appendChild(placeholder)
-
-  const emailField = makeFormField('email', 'email', 'E-mail', null)
-  loginCardInner.appendChild(emailField.formGroup)
-
-  const passwordField = makeFormField('password', 'password', 'Password', null)
-  loginCardInner.appendChild(passwordField.formGroup)
-
-  const button = document.createElement('button')
-  button.setAttribute('type', 'submit')
-  button.className = 'btn btn-primary btn-block'
-  button.textContent = 'Login'
-  loginCardInner.appendChild(button)
-
-  optionsEl.appendChild(loginFrame)
-
-  const doLogin = (event) => {
-    event.preventDefault()
-    button.disabled = true
-    placeholder.innerHTML = ''
-    const email = emailField.input.value
-    const password = passwordField.input.value
-    background.login(email, password)
-      .then(() => {
-        reload()
-      })
-      .catch(err => {
-        button.disabled = false
-        console.error(err)
-        placeholder.appendChild(createError(err.message))
-      })
-    return false
-  }
-
-  loginCard.addEventListener('submit', doLogin)
-  button.addEventListener('click', doLogin)
-}
-
-const showLoggedIn = () => {
-  const loggedInFrame = document.createElement('div')
-  loggedInFrame.className = 'text-center'
-
-  const messageP = document.createElement('p')
-  messageP.textContent = 'Logged in to Standard Notes!'
-  loggedInFrame.appendChild(messageP)
-
-  const button = document.createElement('button')
-  button.setAttribute('type', 'submit')
-  button.className = 'btn btn-primary'
-  button.textContent = 'Logout'
-  loggedInFrame.appendChild(button)
-
-  const doLogout = (event) => {
-    event.preventDefault()
-    background.logout().then(() => reload())
-    return false
-  }
-
-  button.addEventListener('click', doLogout)
-
-  optionsEl.appendChild(loggedInFrame)
-}
-
-const clearContent = () => {
-  optionsEl.innerHTML = ''
-}
-
-const makeHeader = (header) => {
-  const h1 = document.createElement('h1')
-  h1.className = 'text-center'
-  h1.textContent = header
-  return h1
-}
-
-const createError = (message) => {
-  const errorDiv = document.createElement('div')
-  errorDiv.className = 'alert alert-danger'
-  errorDiv.setAttribute('role', 'alert')
-  errorDiv.textContent = message
-  return errorDiv
-}
-
-const makeFormField = (name, type, labelVal, value) => {
-  const formGroup = document.createElement('div')
-  formGroup.className = 'form-group'
-
-  const label = document.createElement('label')
-  label.setAttribute('for', name)
-  label.textContent = labelVal
-  formGroup.appendChild(label)
-
-  const input = document.createElement('input')
-  input.setAttribute('name', name)
-  input.setAttribute('id', name)
-  input.setAttribute('type', type)
-  input.setAttribute('placeholder', labelVal)
-  input.className = 'form-control'
-  if (value) {
-    input.setAttribute('value', value)
-  }
-  formGroup.appendChild(input)
-
-  return {
-    formGroup,
-    input
-  }
-}
-
-const reload = () => {
-  clearContent()
-  
-}
-
-document.addEventListener('DOMContentLoaded', () => reload())
+render(h(SettingsPage), document.getElementById('options'))
