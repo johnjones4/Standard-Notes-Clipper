@@ -73,18 +73,7 @@
 
   const makeHoverElement = () => {
     const hoverEl = document.createElement('div')
-    hoverEl.style.background = 'rgb(50,50,50)'
-    hoverEl.style.opacity = 0.5
-    hoverEl.style.zIndex = 10000000
-    hoverEl.style.border = '#F55 solid 5px'
-    hoverEl.style.padding = 'none'
-    hoverEl.style.margin = 'none'
-    hoverEl.style.position = 'absolute'
-    hoverEl.style.top = 0
-    hoverEl.style.left = 0
-    hoverEl.style.width = 0
-    hoverEl.style.heigh = 0
-    hoverEl.style.pointerEvents = 'none'
+    hoverEl.id = 'standard-notes-clipper-hover'
     return hoverEl
   }
 })()

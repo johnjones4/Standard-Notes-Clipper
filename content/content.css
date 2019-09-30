@@ -1,0 +1,14 @@
+#standard-notes-clipper-hover {
+  background: rgb(50,50,50);
+  opacity: 0.5;
+  z-index: 10000000;
+  border: #F55 solid 5px;
+  padding: none;
+  margin: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
