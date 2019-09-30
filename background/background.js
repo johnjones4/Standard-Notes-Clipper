@@ -11,7 +11,7 @@ chrome.browserAction.onClicked.addListener(tab => {
     .then(() => sendMessagePromise(tabid, 'done'))
     .catch(err => {
       console.error(err)
-      return sendMessagePromise(tabid, 'error', null)
+      return sendMessagePromise(tabid, 'error', { error: err.message })
     })
 })
 

@@ -1,19 +1,23 @@
 (() => {
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === 'clip') {
-      startClipper().then(content => {
-        sendResponse({
-          title: getTitle(),
-          url: getURL(),
-          text: content
+    switch (request.type) {
+      case 'clip':
+        startClipper().then(content => {
+          sendResponse({
+            title: getTitle(),
+            url: getURL(),
+            text: content
+          })
         })
-      })
-      return true
-    } else if (request.type === 'done') {
-      alert('Saved!')
-      return false
-    } else {
-      return false
+        return true
+      case 'done':
+        alert('Saved!')
+        return false
+      case 'error':
+        alert(request.payload.error)
+        return false
+      default:
+        return false
     }
   })
 
