@@ -1,4 +1,4 @@
-/* global StandardFile:readonly */
+/* global StandardFile:readonly checkForUser:readonly sendMessagePromise:readonly saveClipping:readonly chromeSetPromise:readonly getParams:readonly snRequest:readonly syncInfo:readonly */
 
 chrome.browserAction.onClicked.addListener(tab => {
   checkForUser()

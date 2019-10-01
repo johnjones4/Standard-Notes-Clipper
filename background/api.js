@@ -1,5 +1,6 @@
-/* global StandardFile:readonly SFItem:readonly */
+/* global StandardFile:readonly SFItem:readonly chromeGetPromise:readonly chromeSetPromise:readonly snRequest:readonly */
 
+// eslint-disable-next-line no-unused-vars
 const saveClipping = (baseContent) => {
   const SFJS = new StandardFile()
   return chromeGetPromise({
@@ -33,7 +34,7 @@ const saveClipping = (baseContent) => {
             ],
             limit: 1
           })
-      })
+        })
     })
     .then(result => {
       console.log(result)
@@ -100,12 +101,11 @@ const fetchItems = (keys, syncToken, cursorToken, tags, editors) => {
               })
           })
         )
-      ])
-      .then(() => response)
+      ]).then(() => response)
     })
     .then(response => {
       if (response.cursor_token) {
-        return fetchTags(keys, syncToken, response.cursor_token, tags, editors)
+        return fetchItems(keys, syncToken, response.cursor_token, tags, editors)
       } else {
         return {
           tags,
@@ -116,6 +116,7 @@ const fetchItems = (keys, syncToken, cursorToken, tags, editors) => {
     })
 }
 
+// eslint-disable-next-line no-unused-vars
 const syncInfo = () => {
   return chromeGetPromise({
     keys: null,

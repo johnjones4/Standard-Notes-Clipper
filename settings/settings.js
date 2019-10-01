@@ -1,7 +1,7 @@
 const { Component, h, render } = window.preact
 
 const FormField = (props) => {
-  return h('div', { className: 'form-group'},
+  return h('div', { className: 'form-group' },
     h('label', { for: props.name }, props.label),
     h('input', { onChange: (event) => props.onChange(event), required: props.required, name: props.name, id: props.name, type: props.type, placeholder: props.placeholder, className: 'form-control', value: props.value }, props.for)
   )
@@ -16,7 +16,7 @@ class Login extends Component {
       error: null,
       loggingIn: false,
       twofaKey: null,
-      twofaCode: '',
+      twofaCode: ''
     }
   }
 
@@ -60,9 +60,9 @@ class Login extends Component {
       h('form', { className: 'card', onSubmit: (event) => this.login(event) },
         h('div', { className: 'card-body' },
           h('h1', { className: 'text-center' }, title),
-          this.state.error ? h('div', { role: 'alert', className: 'alert alert-danger'}, this.state.error) : null,
+          this.state.error ? h('div', { role: 'alert', className: 'alert alert-danger' }, this.state.error) : null,
           h('div', {}, fields),
-          h('button', {className: 'btn btn-primary btn-block', disabled: this.state.loggingIn, type: 'submit', onClick: (event) => this.login(event)}, button)
+          h('button', { className: 'btn btn-primary btn-block', disabled: this.state.loggingIn, type: 'submit', onClick: (event) => this.login(event) }, button)
         )
       )
     )
@@ -71,10 +71,10 @@ class Login extends Component {
   render () {
     const title = this.state.twofaKey ? 'Two Factor Authentication' : 'Login'
     const fields = this.state.twofaKey ? [
-      h(FormField, { required: true, name: 'code', label: 'Code', type: 'text', value: this.state.twofaCode, onChange: (event) => this.setState({twofaCode: event.target.value}) })
+      h(FormField, { required: true, name: 'code', label: 'Code', type: 'text', value: this.state.twofaCode, onChange: (event) => this.setState({ twofaCode: event.target.value }) })
     ] : [
-      h(FormField, { required: true, name: 'email', label: 'E-mail', type: 'email', value: this.state.email, onChange: (event) => this.setState({email: event.target.value}) }),
-      h(FormField, { required: true,  name: 'password', label: 'Password', type: 'password', value: this.state.password, onChange: (event) => this.setState({password: event.target.value}) }),
+      h(FormField, { required: true, name: 'email', label: 'E-mail', type: 'email', value: this.state.email, onChange: (event) => this.setState({ email: event.target.value }) }),
+      h(FormField, { required: true, name: 'password', label: 'Password', type: 'password', value: this.state.password, onChange: (event) => this.setState({ password: event.target.value }) })
     ]
     const button = this.state.twofaKey ? 'Submit' : 'Login'
     return this.renderLoginForm(title, fields, button)
@@ -87,9 +87,9 @@ class Logout extends Component {
   }
 
   render () {
-    return h('div', {className: 'text-center'},
+    return h('div', { className: 'text-center' },
       h('p', {}, 'Logged in to Standard Notes!'),
-      h('button', {className: 'btn btn-primary', onClick: () => this.logout()}, 'Logout')
+      h('button', { className: 'btn btn-primary', onClick: () => this.logout() }, 'Logout')
     )
   }
 }

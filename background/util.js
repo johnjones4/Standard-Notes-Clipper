@@ -1,4 +1,5 @@
 
+// eslint-disable-next-line no-unused-vars
 const sendMessagePromise = (tabid, type, payload) => {
   return new Promise((resolve, reject) => {
     chrome.tabs.sendMessage(tabid, { type, payload }, (response) => {
@@ -7,6 +8,7 @@ const sendMessagePromise = (tabid, type, payload) => {
   })
 }
 
+// eslint-disable-next-line no-unused-vars
 const chromeSetPromise = (setParams) => {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.set(setParams, () => {
@@ -30,14 +32,16 @@ class SNError extends Error {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 const getParams = (params) => {
   const paramArray = []
-  for(let param in params) {
+  for (let param in params) {
     paramArray.push(param + '=' + encodeURIComponent(params[param]))
   }
   return paramArray.join('&')
 }
 
+// eslint-disable-next-line no-unused-vars
 const snRequest = (auth, path, method, body) => {
   return (() => {
     if (auth) {
@@ -73,6 +77,7 @@ const snRequest = (auth, path, method, body) => {
     })
 }
 
+// eslint-disable-next-line no-unused-vars
 const checkForUser = () => {
   return chromeGetPromise({
     token: null,
