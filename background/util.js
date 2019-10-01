@@ -23,6 +23,21 @@ const chromeGetPromise = (getParams) => {
   })
 }
 
+class SNError extends Error {
+  constructor (message, serverInfo) {
+    super(message, null, null)
+    this.serverInfo = serverInfo
+  }
+}
+
+const getParams = (params) => {
+  const paramArray = []
+  for(let param in params) {
+    paramArray.push(param + '=' + encodeURIComponent(params[param]))
+  }
+  return paramArray.join('&')
+}
+
 const snRequest = (auth, path, method, body) => {
   return (() => {
     if (auth) {
@@ -48,9 +63,9 @@ const snRequest = (auth, path, method, body) => {
     .then(response => response.json())
     .then(res => {
       if (res && res.errors) {
-        throw new Error(res.errors.map(e => e.message).join(', '))
+        throw new SNError(res.errors.map(e => e.message).join(', '), res.errors)
       } else if (res && res.error) {
-        throw new Error(res.error.message)
+        throw new SNError(res.error.message, res.error)
       } else if (!res) {
         throw new Error('Bad data from server!')
       }

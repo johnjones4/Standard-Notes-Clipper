@@ -23,11 +23,12 @@ window.logout = () => {
   })
 }
 
-window.login = (email, password) => {
+window.login = (email, password, extraParams) => {
   let mk = null
   let ak = null
   let params = null
-  return snRequest(false, 'auth/params?email=' + encodeURIComponent(email), 'GET', null)
+  const authParams = getParams(Object.assign({}, { email }, extraParams))
+  return snRequest(false, 'auth/params?' + authParams, 'GET', null)
     .then(_params => {
       params = _params
       const SFJS = new StandardFile()
@@ -36,10 +37,11 @@ window.login = (email, password) => {
     .then(keys => {
       mk = keys.mk
       ak = keys.ak
-      return snRequest(false, 'auth/sign_in', 'POST', {
+      const body = Object.assign({}, {
         email,
         password: keys.pw
-      })
+      }, extraParams)
+      return snRequest(false, 'auth/sign_in', 'POST', body)
     })
     .then(({ token }) => chromeSetPromise({
       token,
@@ -49,11 +51,18 @@ window.login = (email, password) => {
         ak
       }
     }))
+    .catch(error => {
+      if (error.serverInfo.tag === 'mfa-required' || error.serverInfo.tag === 'mfa-invalid') {
+        return error.serverInfo
+      } else {
+        throw error
+      }
+    })
 }
 
 checkForUser()
   .then(items => {
-    if (items.token) {
+    if (items && items.token) {
       syncTags()
     }
   })
