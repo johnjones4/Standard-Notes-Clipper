@@ -18,6 +18,8 @@
       "background/vendor/lodash.min.js",
       "background/vendor/regenerator.js",
       "background/vendor/sfjs.js",
+      "background/util.js",
+      "background/api.js",
       "background/background.js"
     ],
     "persistent": true
