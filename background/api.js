@@ -1,4 +1,4 @@
-/* global StandardFile:readonly SFItem:readonly chromeGetPromise:readonly chromeSetPromise:readonly snRequest:readonly */
+/* global StandardFile:readonly SFItem:readonly chromeGetPromise:readonly chromeSetPromise:readonly snRequest:readonly getPreferredEditor:readonly */
 
 // eslint-disable-next-line no-unused-vars
 const saveClipping = (baseContent) => {
@@ -52,19 +52,6 @@ const saveClipping = (baseContent) => {
           items: items.filter(item => item !== null),
           limit: 1
         }))
-    })
-}
-
-const getPreferredEditor = () => {
-  return chromeGetPromise({
-    editors: {}
-  })
-    .then(({ editors }) => {
-      for (let uuid in editors) {
-        if (editors[uuid].content.name === 'Plus Editor') {
-          return Object.assign({}, editors[uuid])
-        }
-      }
     })
 }
 

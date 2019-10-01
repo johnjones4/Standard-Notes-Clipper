@@ -1,4 +1,4 @@
-/* global StandardFile:readonly checkForUser:readonly sendMessagePromise:readonly saveClipping:readonly chromeSetPromise:readonly getParams:readonly snRequest:readonly syncInfo:readonly */
+/* global StandardFile:readonly checkForUser:readonly sendMessagePromise:readonly saveClipping:readonly chromeSetPromise:readonly getParams:readonly snRequest:readonly syncInfo:readonly chromeGetPromise:readonly */
 
 chrome.browserAction.onClicked.addListener(tab => {
   checkForUser()
@@ -6,12 +6,50 @@ chrome.browserAction.onClicked.addListener(tab => {
     .then(() => sendMessagePromise(tab.id, 'clip', null))
     .then(content => saveClipping(content))
     .then(() => sendMessagePromise(tab.id, 'done'))
-    .then(() => syncInfo())
     .catch(err => {
       console.error(err)
       return sendMessagePromise(tab.id, 'error', { error: err.message })
     })
 })
+
+// eslint-disable-next-line no-unused-vars
+const getPreferredEditor = window.getPreferredEditor = () => {
+  return chromeGetPromise({
+    editors: {},
+    preferredEditor: null
+  })
+    .then(({ editors, preferredEditor }) => {
+      if (preferredEditor && editors[preferredEditor]) {
+        return editors[preferredEditor]
+      }
+      for (let uuid in editors) {
+        if (editors[uuid].content.name === 'Plus Editor') {
+          return editors[uuid]
+        }
+      }
+    })
+}
+
+// eslint-disable-next-line no-unused-vars
+const getEditors = window.getEditors = () => {
+  return chromeGetPromise({
+    editors: {}
+  })
+    .then(editors => {
+      const arr = []
+      for (let uuid in editors) {
+        arr.push(editors[uuid])
+      }
+      return arr
+    })
+}
+
+// eslint-disable-next-line no-unused-vars
+const setPreferredEditor = window.setPreferredEditor = (editorUUID) => {
+  return chromeGetPromise({
+    preferredEditor: editorUUID
+  })
+}
 
 window.logout = () => {
   return chromeSetPromise({
@@ -20,7 +58,8 @@ window.logout = () => {
     keys: null,
     tagSyncToken: null,
     tags: {},
-    editors: {}
+    editors: {},
+    preferredEditor: null
   })
 }
 

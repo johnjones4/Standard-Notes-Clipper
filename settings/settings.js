@@ -81,15 +81,51 @@ class Login extends Component {
   }
 }
 
-class Logout extends Component {
+class LoggedIn extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      editors: [],
+      preferredEditor: null
+    }
+  }
+
+  componentDidMount () {
+    this.loadValues()
+  }
+
+  loadValues () {
+    chrome.extension.getBackgroundPage().getEditors().then(editors => this.setState({ editors }))
+    chrome.extension.getBackgroundPage().getPreferredEditor().then(preferredEditor => this.setState({ preferredEditor: preferredEditor.uuid }))
+  }
+
   logout () {
     chrome.extension.getBackgroundPage().logout().then(() => this.props.stateChanged())
   }
 
+  renderEditorSetting () {
+    return h('form-group', {},
+      h('label', {}, 'Preferred Editor'),
+      h('select', {
+        className: 'form-control'
+      }, this.state.editors.map((editor, i) => {
+        return h('option', {
+          key: i,
+          value: editor.uuid
+        }, editor.content.name)
+      }))
+    )
+  }
+
   render () {
-    return h('div', { className: 'text-center' },
-      h('p', {}, 'Logged in to Standard Notes!'),
-      h('button', { className: 'btn btn-primary', onClick: () => this.logout() }, 'Logout')
+    return h('div', { className: 'col-lg-10' },
+      h('h1', {}, 'Standard Notes Clipper Settings'),
+      h('fieldset', { className: 'table table-striped' },
+        h('legend', {}, 'Settings'),
+        this.renderEditorSetting()
+      ),
+      h('hr'),
+      h('button', { className: 'btn btn-danger', onClick: () => this.logout() }, 'Logout')
     )
   }
 }
@@ -115,7 +151,7 @@ class SettingsPage extends Component {
       if (items.token === null || items.params === null || items.keys === null) {
         this.setState({ mode: 'login' })
       } else {
-        this.setState({ mode: 'logout' })
+        this.setState({ mode: 'loggedin' })
       }
     })
   }
@@ -124,8 +160,8 @@ class SettingsPage extends Component {
     switch (this.state.mode) {
       case 'login':
         return h(Login, { stateChanged: () => this.checkState() })
-      case 'logout':
-        return h(Logout, { stateChanged: () => this.checkState() })
+      case 'loggedin':
+        return h(LoggedIn, { stateChanged: () => this.checkState() })
       default:
         return null
     }
