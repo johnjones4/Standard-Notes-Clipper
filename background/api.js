@@ -3,53 +3,74 @@
 // eslint-disable-next-line no-unused-vars
 const saveClipping = (baseContent) => {
   const SFJS = new StandardFile()
-  return chromeGetPromise({
-    editors: {},
-    params: {},
-    keys: {}
-  })
-    .then(({ editors, params, keys }) => {
+  return getPreferredEditor()
+    .then(editor => {
       const item = new SFItem({
         content: Object.assign({}, baseContent, {
-          appData: generateAppData(editors),
+          appData: generateAppData(editor),
           preview_plain: baseContent.text,
           preview_html: baseContent.text
         }),
         content_type: 'Note',
         created_at: new Date()
       })
-      console.log(item)
-      return SFJS.itemTransformer.encryptItem(item, keys, params)
-        // eslint-disable-next-line camelcase
-        .then(({ content, enc_item_key }) => {
+      if (editor) {
+        editor.content.associatedItemIds.push(item.uuid)
+      }
+      return chromeGetPromise({
+        params: {},
+        keys: {}
+      })
+        .then(({ params, keys }) => {
+          return Promise.all([
+            SFJS.itemTransformer.encryptItem(item, keys, params),
+            editor ? SFJS.itemTransformer.encryptItem(new SFItem(editor), keys, params) : Promise.resolve(null)
+          ])
+        })
+        .then(info => {
+          const items = [
+            {
+              uuid: item.uuid,
+              content: info[0].content,
+              enc_item_key: info[0].enc_item_key,
+              content_type: item.content_type,
+              created_at: item.created_at
+            }
+          ]
+          if (info[1] !== null) {
+            Object.assign({}, editor, {
+              content: info[1].content,
+              enc_item_key: info[1].enc_item_key
+            })
+          }
           return snRequest(true, 'items/sync', 'POST', {
-            items: [
-              {
-                uuid: item.uuid,
-                content,
-                enc_item_key,
-                content_type: item.content_type,
-                created_at: item.created_at
-              }
-            ],
+            items,
             limit: 1
           })
         })
     })
-    .then(result => {
-      console.log(result)
+}
+
+const getPreferredEditor = () => {
+  return chromeGetPromise({
+    editors: {}
+  })
+    .then(({ editors }) => {
+      for (let uuid in editors) {
+        if (editors[uuid].content.name === 'Plus Editor') {
+          return Object.assign({}, editors[uuid])
+        }
+      }
     })
 }
 
-const generateAppData = (editors) => {
+const generateAppData = (editor) => {
   const appData = {}
-  for (let uuid in editors) {
-    if (editors[uuid] === 'Plus Editor') {
-      appData['org.standardnotes.sn.components'] = {}
-      appData['org.standardnotes.sn.components'][uuid] = {}
-      appData['org.standardnotes.sn'] = {
-        prefersPlainEditor: false
-      }
+  if (editor) {
+    appData['org.standardnotes.sn.components'] = {}
+    appData['org.standardnotes.sn.components'][editor.uuid] = {}
+    appData['org.standardnotes.sn'] = {
+      prefersPlainEditor: false
     }
   }
   return appData
@@ -85,8 +106,8 @@ const fetchItems = (keys, syncToken, cursorToken, tags, editors) => {
           newTags.map(tag => {
             return SFJS.itemTransformer.decryptItem(tag, keys)
               .then(() => {
-                const content = JSON.parse(tag.content)
-                tags[tag.uuid] = content.title
+                tag.content = JSON.parse(tag.content)
+                tags[tag.uuid] = tag
               })
           })
         ),
@@ -94,9 +115,9 @@ const fetchItems = (keys, syncToken, cursorToken, tags, editors) => {
           newPossibleEditors.map(possibleEditor => {
             return SFJS.itemTransformer.decryptItem(possibleEditor, keys)
               .then(() => {
-                const content = JSON.parse(possibleEditor.content)
-                if (content.area === 'editor-editor') {
-                  editors[possibleEditor.uuid] = content.name
+                possibleEditor.content = JSON.parse(possibleEditor.content)
+                if (possibleEditor.content.area === 'editor-editor') {
+                  editors[possibleEditor.uuid] = possibleEditor
                 }
               })
           })

@@ -2,9 +2,11 @@
 
 chrome.browserAction.onClicked.addListener(tab => {
   checkForUser()
+    .then(() => syncInfo())
     .then(() => sendMessagePromise(tab.id, 'clip', null))
     .then(content => saveClipping(content))
     .then(() => sendMessagePromise(tab.id, 'done'))
+    .then(() => syncInfo())
     .catch(err => {
       console.error(err)
       return sendMessagePromise(tab.id, 'error', { error: err.message })
