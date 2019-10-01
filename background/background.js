@@ -2,10 +2,8 @@
 
 chrome.browserAction.onClicked.addListener(tab => {
   checkForUser()
-    .then(userInfo => {
-      return sendMessagePromise(tab.id, 'clip', null)
-        .then(content => saveClipping(content, userInfo))
-    })
+    .then(() => sendMessagePromise(tab.id, 'clip', null))
+    .then(content => saveClipping(content))
     .then(() => sendMessagePromise(tab.id, 'done'))
     .catch(err => {
       console.error(err)
@@ -19,7 +17,8 @@ window.logout = () => {
     params: null,
     keys: null,
     tagSyncToken: null,
-    tags: []
+    tags: {},
+    editors: {}
   })
 }
 
@@ -63,6 +62,6 @@ window.login = (email, password, extraParams) => {
 checkForUser()
   .then(items => {
     if (items && items.token) {
-      syncTags()
+      syncInfo()
     }
   })
