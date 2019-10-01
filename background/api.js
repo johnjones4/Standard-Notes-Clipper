@@ -4,18 +4,24 @@
 const saveClipping = (baseContent) => {
   const SFJS = new StandardFile()
   return getPreferredEditor()
-    .then(editor => {
+    .then(_editor => {
       const item = new SFItem({
         content: Object.assign({}, baseContent, {
-          appData: generateAppData(editor),
+          appData: {},
           preview_plain: baseContent.text,
           preview_html: baseContent.text
         }),
         content_type: 'Note',
         created_at: new Date()
       })
+      const editor = _editor ? new SFItem(_editor) : null
       if (editor) {
         editor.content.associatedItemIds.push(item.uuid)
+        item.content.appData['org.standardnotes.sn.components'] = {}
+        item.content.appData['org.standardnotes.sn.components'][editor.uuid] = {}
+        item.content.appData['org.standardnotes.sn'] = {
+          prefersPlainEditor: false
+        }
       }
       return chromeGetPromise({
         params: {},
@@ -24,7 +30,7 @@ const saveClipping = (baseContent) => {
         .then(({ params, keys }) => {
           return Promise.all([
             SFJS.itemTransformer.encryptItem(item, keys, params),
-            editor ? SFJS.itemTransformer.encryptItem(new SFItem(editor), keys, params) : Promise.resolve(null)
+            editor ? SFJS.itemTransformer.encryptItem(editor, keys, params) : Promise.resolve(null)
           ])
         })
         .then(info => {
@@ -62,18 +68,6 @@ const getPreferredEditor = () => {
         }
       }
     })
-}
-
-const generateAppData = (editor) => {
-  const appData = {}
-  if (editor) {
-    appData['org.standardnotes.sn.components'] = {}
-    appData['org.standardnotes.sn.components'][editor.uuid] = {}
-    appData['org.standardnotes.sn'] = {
-      prefersPlainEditor: false
-    }
-  }
-  return appData
 }
 
 const fetchItems = (keys, syncToken, cursorToken, tags, editors) => {
