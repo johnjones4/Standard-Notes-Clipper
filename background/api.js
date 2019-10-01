@@ -29,31 +29,29 @@ const saveClipping = (baseContent) => {
       })
         .then(({ params, keys }) => {
           return Promise.all([
-            SFJS.itemTransformer.encryptItem(item, keys, params),
-            editor ? SFJS.itemTransformer.encryptItem(editor, keys, params) : Promise.resolve(null)
+            // eslint-disable-next-line camelcase
+            SFJS.itemTransformer.encryptItem(item, keys, params).then(({ content, enc_item_key }) => {
+              return {
+                uuid: item.uuid,
+                content,
+                enc_item_key,
+                content_type: item.content_type,
+                created_at: item.created_at
+              }
+            }),
+            // eslint-disable-next-line camelcase
+            editor ? SFJS.itemTransformer.encryptItem(editor, keys, params).then(({ content, enc_item_key }) => {
+              return Object.assign({}, editor, {
+                content,
+                enc_item_key
+              })
+            }) : Promise.resolve(null)
           ])
         })
-        .then(info => {
-          const items = [
-            {
-              uuid: item.uuid,
-              content: info[0].content,
-              enc_item_key: info[0].enc_item_key,
-              content_type: item.content_type,
-              created_at: item.created_at
-            }
-          ]
-          if (info[1] !== null) {
-            Object.assign({}, editor, {
-              content: info[1].content,
-              enc_item_key: info[1].enc_item_key
-            })
-          }
-          return snRequest(true, 'items/sync', 'POST', {
-            items,
-            limit: 1
-          })
-        })
+        .then(items => snRequest(true, 'items/sync', 'POST', {
+          items: items.filter(item => item !== null),
+          limit: 1
+        }))
     })
 }
 
