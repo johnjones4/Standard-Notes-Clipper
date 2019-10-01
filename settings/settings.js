@@ -103,15 +103,22 @@ class LoggedIn extends Component {
     chrome.extension.getBackgroundPage().logout().then(() => this.props.stateChanged())
   }
 
+  setPreferredEditor (uuid) {
+    this.setState({ preferredEditor: uuid })
+    chrome.extension.getBackgroundPage().setPreferredEditor(uuid)
+  }
+
   renderEditorSetting () {
     return h('form-group', {},
       h('label', {}, 'Preferred Editor'),
       h('select', {
-        className: 'form-control'
+        className: 'form-control',
+        onChange: (event) => this.setPreferredEditor(this.state.editors[event.target.selectedIndex].uuid)
       }, this.state.editors.map((editor, i) => {
         return h('option', {
           key: i,
-          value: editor.uuid
+          value: editor.uuid,
+          selected: editor.uuid === this.state.preferredEditor
         }, editor.content.name)
       }))
     )

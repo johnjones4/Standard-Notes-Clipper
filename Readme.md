@@ -17,7 +17,6 @@ Go to _Window_ > _Extensions_, then click _Load unpacked_ and drive to folder co
 
 There is much to do to make this a fully usable project, and I'll need some help getting there. Here's a list of what I see needs to be done, but I'm open to suggestions for other necessary improvements:
 
-* **Editor Preference** - When articles are clipped right now, they show up as HTML in Standard Notes, but if you switch the note to use the _Plus Editor_, the HTML renders properly. I do not know how to set that editor as the preferred editor when creating the note via the API.
 * **Clipping User Experience** - The clipping experience is really just a proof of concept, and so there's very little thought given to the user experience of clipping.
 * **Tagging** - It'd be great to tag clipped articles after saving.
 * **Branding** - This will be determined by how this fits into the Standard Notes ecosystem, but there's really no look or feel to this add-on.

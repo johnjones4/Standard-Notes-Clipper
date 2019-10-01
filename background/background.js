@@ -35,7 +35,7 @@ const getEditors = window.getEditors = () => {
   return chromeGetPromise({
     editors: {}
   })
-    .then(editors => {
+    .then(({ editors }) => {
       const arr = []
       for (let uuid in editors) {
         arr.push(editors[uuid])
@@ -46,7 +46,7 @@ const getEditors = window.getEditors = () => {
 
 // eslint-disable-next-line no-unused-vars
 const setPreferredEditor = window.setPreferredEditor = (editorUUID) => {
-  return chromeGetPromise({
+  return chromeSetPromise({
     preferredEditor: editorUUID
   })
 }
