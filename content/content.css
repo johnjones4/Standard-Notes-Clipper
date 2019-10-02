@@ -1,8 +1,7 @@
 #standard-notes-clipper-hover {
-  background: rgb(50,50,50);
-  opacity: 0.5;
+  background: rgba(50,50,50,0.05);
   z-index: 10000000;
-  border: #F55 solid 5px;
+  border: rgb(8, 109, 214) dashed 5px;
   padding: none;
   margin: none;
   position: absolute;
@@ -11,4 +10,93 @@
   width: 0;
   height: 0;
   pointer-events: none;
+  cursor: pointer;
+}
+
+#standard-notes-clipper-hover.selected {
+  border-style: solid;
+}
+
+#standard-notes-control-box {
+  z-index: 10000001;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  padding: 10px 10px 0 10px;
+  background: white;
+  border: solid 1px rgb(227, 227, 227);
+  border-top-color: rgb(8, 109, 214);
+  border-top-width: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  font-size: 14px;
+  color: black;
+  line-height: 1.25em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+#standard-notes-control-box h1 {
+  font-size: 20px;
+  margin: 0 0 10px 0;
+  line-height: 1.25em;
+  color: black;
+}
+
+#standard-notes-control-box .section {
+  margin: 0 0 1em 0;
+  overflow: hidden;
+  transition: all 1s linear;
+  height: auto;
+  max-height: 1000px;
+}
+
+#standard-notes-control-box .direction {
+  font-style: italic;
+  color: #444;
+}
+
+#standard-notes-control-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 18px;
+}
+
+#standard-notes-control-box input.title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#standard-notes-control-box input.tags {
+  color: #666;
+}
+
+#standard-notes-control-box button {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  margin-right: 4px;
+}
+
+#standard-notes-control-box button.save {
+  background: rgb(8, 109, 214);
+  color: white;
+  box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
+}
+
+#standard-notes-control-box button.skip {
+  border: solid 1px rgb(227, 227, 227);
+  color: #666;
+}
+
+#standard-notes-control-box.mode-1 .forms,
+#standard-notes-control-box.mode-1 .buttons,
+#standard-notes-control-box.mode-2 .start-direction {
+  max-height: 0;
+  margin-bottom: 0;
 }
