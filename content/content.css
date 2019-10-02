@@ -46,9 +46,6 @@
 #standard-notes-control-box .section {
   margin: 0 0 1em 0;
   overflow: hidden;
-  transition: all 1s linear;
-  height: auto;
-  max-height: 1000px;
 }
 
 #standard-notes-control-box .direction {
@@ -92,11 +89,4 @@
 #standard-notes-control-box button.skip {
   border: solid 1px rgb(227, 227, 227);
   color: #666;
-}
-
-#standard-notes-control-box.mode-1 .forms,
-#standard-notes-control-box.mode-1 .buttons,
-#standard-notes-control-box.mode-2 .start-direction {
-  max-height: 0;
-  margin-bottom: 0;
 }

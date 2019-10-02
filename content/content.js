@@ -68,10 +68,21 @@
     constructor (content) {
       this.content = content
       this.handlers = {}
+      this.step = 0
       this.initHoverElement()
       this.initControlBoxElement()
+      this.updateControlBoxState()
       this.mouseMovedHandler = (event) => this.mouseMoved(event)
       this.mouseClickedHandler = (event) => this.mouseClicked(event)
+    }
+
+    setStep (step) {
+      this.step = step
+      this.updateControlBoxState()
+    }
+
+    nextStep () {
+      this.setStep(this.step + 1)
     }
 
     initHoverElement () {
@@ -81,52 +92,65 @@
 
     initControlBoxElement () {
       this.controlBox = document.createElement('div')
-      this.controlBox.id = 'standard-notes-control-box'
-      this.controlBox.classList = 'mode-1'
+      this.controlBox.id = 'standard-notes-control-box'      
+    }
 
-      // const title = document.createElement('h1')
-      // title.textContent = 'Clip to Standard Notes'
-      // this.controlBox.appendChild(title)
+    updateControlBoxState () {
+      this.controlBox.innerHTML = ''
+      switch (this.step) {
+        case 0:
+          const help = document.createElement('p')
+          help.textContent = 'Hover over the segment of the page you wish to clip and click.'
+          help.className = 'section start-direction direction'
+          this.controlBox.appendChild(help)
+          break
+        case 1:
+          const save = document.createElement('p')
+          save.textContent = 'Saving ...'
+          save.className = 'section start-direction saving'
+          this.controlBox.appendChild(save)
+          break
+        case 2:
+          const formSection = document.createElement('div')
+          formSection.className = 'section forms'
+          this.controlBox.appendChild(formSection)
 
-      const help = document.createElement('p')
-      help.textContent = 'Hover over the segment of the page you wish to clip and click.'
-      help.className = 'section start-direction direction'
-      this.controlBox.appendChild(help)
+          const titleField = document.createElement('input')
+          titleField.type = 'text'
+          titleField.className = 'title' 
+          titleField.value = this.content.title
+          titleField.addEventListener('keyup', () => {
+            this.content.title = titleField.value
+          })
+          titleField.addEventListener('change', () => {
+            this.content.title = titleField.value
+          })
+          formSection.appendChild(titleField)
 
-      const formSection = document.createElement('div')
-      formSection.className = 'section forms'
-      this.controlBox.appendChild(formSection)
+          const tagsField = document.createElement('input')
+          tagsField.type = 'text'
+          tagsField.className = 'tags'
+          tagsField.value = this.content.tags.length > 0 ? ('#' + this.content.tags.join(' #')) : ''
+          tagsField.placeholder = '#Tags'
+          tagsField.addEventListener('keyup', () => this.updateTags(tagsField.value))
+          tagsField.addEventListener('change', () => this.updateTags(tagsField.value))
+          formSection.appendChild(tagsField)
 
-      const titleField = document.createElement('input')
-      titleField.type = 'text'
-      titleField.className = 'title' 
-      titleField.value = this.content.title
-      titleField.addEventListener('keyup', () => this.content.title = titleField.value)
-      titleField.addEventListener('change', () => this.content.title = titleField.value)
-      formSection.appendChild(titleField)
+          const buttonSection = document.createElement('div')
+          buttonSection.className = 'section buttons'
+          this.controlBox.appendChild(buttonSection)
 
-      const tagsField = document.createElement('input')
-      tagsField.type = 'text'
-      tagsField.className = 'tags'
-      tagsField.value = this.content.tags.length > 0 ? ('#' + this.content.tags.join(' #')) : ''
-      tagsField.placeholder = '#Tags'
-      tagsField.addEventListener('keyup', () => this.updateTags(tagsField.value))
-      tagsField.addEventListener('change', () => this.updateTags(tagsField.value))
-      formSection.appendChild(tagsField)
+          const okButton = document.createElement('button')
+          okButton.className = 'save'
+          okButton.textContent = 'Save'
+          buttonSection.appendChild(okButton)
 
-      const buttonSection = document.createElement('div')
-      buttonSection.className = 'section buttons'
-      this.controlBox.appendChild(buttonSection)
-
-      const okButton = document.createElement('button')
-      okButton.className = 'save'
-      okButton.textContent = 'Save'
-      buttonSection.appendChild(okButton)
-
-      const cancelButton = document.createElement('button')
-      cancelButton.className = 'skip'
-      cancelButton.textContent = 'Skip'
-      buttonSection.appendChild(cancelButton)
+          const cancelButton = document.createElement('button')
+          cancelButton.className = 'skip'
+          cancelButton.textContent = 'Skip'
+          buttonSection.appendChild(cancelButton)
+          break
+      }
     }
 
     updateTags (tagsStr) {
@@ -153,7 +177,7 @@
       this.shadowDomRoot = document.createElement('div')
       this.shadowDomRoot.style.zIndex = 100000
       document.body.appendChild(this.shadowDomRoot)
-      this.shadowDomRoot.attachShadow({mode: 'open'})
+      this.shadowDomRoot.attachShadow({ mode: 'open' })
       return fetch(chrome.runtime.getURL('content/content.css'))
         .then(res => res.text())
         .then(stylesheet => {
@@ -198,8 +222,7 @@
       if (element && element !== this.shadowDomRoot) {
         this.removeListeners()
         this.hoverElement.classList.add('selected')
-        this.controlBox.classList.remove('mode-1')
-        this.controlBox.classList.add('mode-2')
+        this.controlBox.classList.add('clipped')
         this.content.text = element.innerHTML
         this.fire('clipped', this.content)
       }
