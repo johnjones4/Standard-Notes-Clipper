@@ -9,14 +9,20 @@
             .then(content => sendResponse(content))
             .catch(err => console.error(err))
         } catch (err) {
-          console.error(err)
+          alert(err.message)
         }
         return true
+      case 'saved':
+        finishClipper()
+          .then(content => sendResponse(content))
+          .catch(err => console.error(err))
+        return true
       case 'done':
-        alert('Saved!')
-        return false
+        removeClipper()
+        return true
       case 'error':
         alert(request.payload.error)
+        clipper = null
         return false
       default:
         return false
@@ -64,6 +70,25 @@
       })
   }
 
+  const finishClipper = () => {
+    if (clipper) {
+      clipper.setStep(2)
+      return new Promise((resolve, reject) => {
+        clipper.on('finalized', (content) => {
+          resolve(content)
+        })
+      })
+    }
+    return Promise.reject()
+  }
+
+  const removeClipper = () => {
+    if (clipper) {
+      clipper.setStep(3)
+      clipper = null
+    }
+  }
+
   class Clipper {
     constructor (content) {
       this.content = content
@@ -71,23 +96,23 @@
       this.step = 0
       this.initHoverElement()
       this.initControlBoxElement()
-      this.updateControlBoxState()
+      this.updateState()
       this.mouseMovedHandler = (event) => this.mouseMoved(event)
       this.mouseClickedHandler = (event) => this.mouseClicked(event)
     }
 
     setStep (step) {
       this.step = step
-      this.updateControlBoxState()
-    }
-
-    nextStep () {
-      this.setStep(this.step + 1)
+      this.updateState()
     }
 
     initHoverElement () {
       this.hoverElement = document.createElement('div')
       this.hoverElement.id = 'standard-notes-clipper-hover'
+
+      const innerElement = document.createElement('div')
+      innerElement.className = 'spinner'
+      this.hoverElement.appendChild(innerElement)
     }
 
     initControlBoxElement () {
@@ -95,22 +120,23 @@
       this.controlBox.id = 'standard-notes-control-box'      
     }
 
-    updateControlBoxState () {
-      this.controlBox.innerHTML = ''
+    updateState () {
       switch (this.step) {
         case 0:
+          this.controlBox.innerHTML = ''
           const help = document.createElement('p')
           help.textContent = 'Hover over the segment of the page you wish to clip and click.'
           help.className = 'section start-direction direction'
           this.controlBox.appendChild(help)
           break
         case 1:
-          const save = document.createElement('p')
-          save.textContent = 'Saving ...'
-          save.className = 'section start-direction saving'
-          this.controlBox.appendChild(save)
+          this.hoverElement.classList.add('selected')
           break
         case 2:
+          this.controlBox.innerHTML = ''
+          this.hoverElement.classList.remove('selected')
+          this.hoverElement.classList.add('final')
+
           const formSection = document.createElement('div')
           formSection.className = 'section forms'
           this.controlBox.appendChild(formSection)
@@ -143,12 +169,25 @@
           const okButton = document.createElement('button')
           okButton.className = 'save'
           okButton.textContent = 'Save'
+          okButton.addEventListener('click', () => {
+            okButton.disabled = true
+            cancelButton.disabled = true
+            this.fire('finalized', this.content)
+          })
           buttonSection.appendChild(okButton)
 
           const cancelButton = document.createElement('button')
           cancelButton.className = 'skip'
           cancelButton.textContent = 'Skip'
+          cancelButton.addEventListener('click', () => {
+            okButton.disabled = true
+            cancelButton.disabled = true
+            this.fire('finalized', null)
+          })
           buttonSection.appendChild(cancelButton)
+          break
+        case 3:
+          this.detach()
           break
       }
     }
@@ -221,8 +260,7 @@
       const element = document.elementFromPoint(event.clientX, event.clientY)
       if (element && element !== this.shadowDomRoot) {
         this.removeListeners()
-        this.hoverElement.classList.add('selected')
-        this.controlBox.classList.add('clipped')
+        clipper.setStep(1)
         this.content.text = element.innerHTML
         this.fire('clipped', this.content)
       }

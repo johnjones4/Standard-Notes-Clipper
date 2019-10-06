@@ -1,10 +1,22 @@
 /* global StandardFile:readonly checkForUser:readonly sendMessagePromise:readonly saveClipping:readonly chromeSetPromise:readonly getParams:readonly snRequest:readonly syncInfo:readonly chromeGetPromise:readonly */
 
 chrome.browserAction.onClicked.addListener(tab => {
+  let item = null
   checkForUser()
     .then(() => syncInfo())
     .then(() => sendMessagePromise(tab.id, 'clip', null))
     .then(content => saveClipping(content))
+    .then(_item => {
+      item = _item
+      return sendMessagePromise(tab.id, 'saved', null)
+    })
+    .then(content => {
+      if (content) {
+        item.content.title = content.title
+        item.content.text = content.text
+        return updateItemTags(item, content.tags)
+      }
+    })
     .then(() => sendMessagePromise(tab.id, 'done'))
     .catch(err => {
       console.error(err)

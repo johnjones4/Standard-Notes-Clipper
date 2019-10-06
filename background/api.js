@@ -2,10 +2,11 @@
 
 // eslint-disable-next-line no-unused-vars
 const saveClipping = (baseContent) => {
+  let item = null
   const SFJS = new StandardFile()
   return getPreferredEditor()
     .then(_editor => {
-      const item = new SFItem({
+      item = new SFItem({
         content: Object.assign({}, baseContent, {
           appData: {},
           preview_plain: baseContent.text,
@@ -53,6 +54,56 @@ const saveClipping = (baseContent) => {
           limit: 1
         }))
     })
+    .then(() => {
+      return item
+    })
+}
+
+const updateItemTags = (item, itemTags) => {
+  return chromeGetPromise({
+    params: {},
+    keys: {},
+    noteTags: {}
+  })
+    .then(({ params, keys, noteTags }) => {
+      constTagNameMap = {}
+      for (let uuid in noteTags) {
+        const tag = noteTags[uuid]
+        constTagNameMap[tag.content.title] = tag
+      }
+      const saveItems = [item]
+      itemTags.forEach(tagName => {
+        let tagItem = null
+        if (constTagNameMap[tagName]) {
+          tagItem = new SFItem(constTagNameMap[tagName])
+        } else {
+          tagItem = new SFItem({
+            content: {
+              title: tagName
+            },
+            content_type: 'Tag',
+            created_at: new Date()
+          })
+        }
+        item.addItemAsRelationship(tagItem)
+        saveItems.push(tagItem)
+      })
+
+      return Promise.all(
+        saveItems.map(item => {
+          return SFJS.itemTransformer.encryptItem(item, keys, params).then(({ content, enc_item_key }) => {
+            return Object.assign({}, item, {
+              content,
+              enc_item_key
+            })
+          })
+        })
+      )
+    })
+    .then(items => snRequest(true, 'items/sync', 'POST', {
+      items,
+      limit: 1
+    }))
 }
 
 const fetchItems = (keys, syncToken, cursorToken, tags, editors) => {
@@ -121,16 +172,16 @@ const syncInfo = () => {
   return chromeGetPromise({
     keys: null,
     tagSyncToken: null,
-    tags: {},
+    noteTags: {},
     editors: {}
   })
-    .then(({ tagSyncToken, tags, keys, editors }) => {
-      return fetchItems(keys, tagSyncToken, null, tags, editors)
+    .then(({ tagSyncToken, noteTags, keys, editors }) => {
+      return fetchItems(keys, tagSyncToken, null, noteTags, editors)
     })
     .then(({ tags, editors, syncToken }) => {
       return chromeSetPromise({
         tagSyncToken: syncToken,
-        tags: tags,
+        noteTags: tags,
         editors: editors
       }).then(() => tags)
     })
