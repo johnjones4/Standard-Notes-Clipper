@@ -79,13 +79,16 @@
         })
       })
     }
-    return Promise.reject()
+    return Promise.reject(new Error('No active clipper'))
   }
 
   const removeClipper = () => {
     if (clipper) {
       clipper.setStep(2)
-      clipper = null
+      setTimeout(() => {
+        clipper.detach()
+        clipper = null
+      }, 1000)
     }
   }
 
@@ -140,7 +143,7 @@
       if (this.shadowDomRoot) {
         this.shadowDomRoot.remove()
       }
-    } 
+    }
 
     setStep (step) {
       this.step = step
@@ -205,7 +208,7 @@
         this.fire('clipped', this.content)
       })
       this.selector.start()
-    }   
+    }
   }
 
   class ClipperControlBoxController extends ClipperBase {
@@ -233,7 +236,7 @@
 
     initElement () {
       this.controlBox = document.createElement('div')
-      this.controlBox.className = 'standard-notes-control-box' 
+      this.controlBox.className = 'standard-notes-control-box'
 
       const modeSelector = document.createElement('div')
       modeSelector.className = 'section mode-selector'
@@ -288,7 +291,7 @@
 
     initElement () {
       this.controlBox = document.createElement('div')
-      this.controlBox.className = 'standard-notes-control-box' 
+      this.controlBox.className = 'standard-notes-control-box'
 
       const formSection = document.createElement('div')
       formSection.className = 'section forms'
@@ -296,7 +299,7 @@
 
       const titleField = document.createElement('input')
       titleField.type = 'text'
-      titleField.className = 'title' 
+      titleField.className = 'title'
       titleField.value = this.content.title
       titleField.addEventListener('keyup', () => {
         this.content.title = titleField.value
@@ -428,6 +431,7 @@
       this.grabButton.className = 'highlight-grab-button'
       this.grabButton.textContent = 'Clip Text'
       this.grabButton.addEventListener('click', () => {
+        this.finish()
         this.fire('clipped', window.getSelection().toString())
       }, false)
     }

@@ -59,14 +59,16 @@ const saveClipping = (baseContent) => {
     })
 }
 
+// eslint-disable-next-line no-unused-vars
 const updateItemTags = (item, itemTags) => {
+  const SFJS = new StandardFile()
   return chromeGetPromise({
     params: {},
     keys: {},
     noteTags: {}
   })
     .then(({ params, keys, noteTags }) => {
-      constTagNameMap = {}
+      const constTagNameMap = {}
       for (let uuid in noteTags) {
         const tag = noteTags[uuid]
         constTagNameMap[tag.content.title] = tag
@@ -91,6 +93,7 @@ const updateItemTags = (item, itemTags) => {
 
       return Promise.all(
         saveItems.map(item => {
+          // eslint-disable-next-line camelcase
           return SFJS.itemTransformer.encryptItem(item, keys, params).then(({ content, enc_item_key }) => {
             return Object.assign({}, item, {
               content,
