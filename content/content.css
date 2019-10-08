@@ -98,11 +98,11 @@
 }
 
 
-#standard-notes-control-box {
+.standard-notes-control-box {
   z-index: 10000001;
   position: fixed;
   top: 10px;
-  right: 10px;
+  right: -350px;
   width: 300px;
   padding: 10px 10px 0 10px;
   background: white;
@@ -115,26 +115,31 @@
   color: black;
   line-height: 1.25em;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  transition: all 0.5s;
 }
 
-#standard-notes-control-box h1 {
+.standard-notes-control-box.active {
+  right: 10px;
+}
+
+.standard-notes-control-box h1 {
   font-size: 20px;
   margin: 0 0 10px 0;
   line-height: 1.25em;
   color: black;
 }
 
-#standard-notes-control-box .section {
+.standard-notes-control-box .section {
   margin: 0 0 1em 0;
   overflow: hidden;
 }
 
-#standard-notes-control-box .direction {
+.standard-notes-control-box .direction {
   font-style: italic;
   color: #444;
 }
 
-#standard-notes-control-box input {
+.standard-notes-control-box input {
   border: none;
   outline: none;
   width: 100%;
@@ -143,16 +148,16 @@
   font-size: 18px;
 }
 
-#standard-notes-control-box input.title {
+.standard-notes-control-box input.title {
   font-size: 20px;
   font-weight: bold;
 }
 
-#standard-notes-control-box input.tags {
+.standard-notes-control-box input.tags {
   color: #666;
 }
 
-#standard-notes-control-box button {
+.standard-notes-control-box button {
   border: none;
   outline: none;
   font-size: 16px;
@@ -163,19 +168,62 @@
   cursor: pointer;
 }
 
-#standard-notes-control-box button:hover,
-#standard-notes-control-box button:active {
+.standard-notes-control-box button:hover,
+.standard-notes-control-box button:active {
   border-color: rgb(70, 70, 70);
 }
 
-#standard-notes-control-box button.save {
+.standard-notes-control-box button.save {
   background: rgb(8, 109, 214);
   color: white;
   box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
 }
 
-#standard-notes-control-box button.skip {
+.standard-notes-control-box button.skip {
   box-shadow: rgb(214, 214, 214) 0px 0px 0px 1px inset;
   color: #666;
 }
 
+.highlight-grab-button {
+  position: fixed;
+  top: -100;
+  left: -100;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  margin-right: 4px;
+  border: solid 1px transparent;
+  cursor: pointer;
+  background: rgb(8, 109, 214);
+  color: white;
+  box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
+}
+
+.standard-notes-control-box .mode-selector .mode-button {
+  display: inline-block;
+  width: 50%;
+  box-sizing: border-box;
+  margin: 0;
+  box-shadow: rgb(214, 214, 214) 0px 0px 0px 1px inset;
+  color: #666;
+}
+
+.standard-notes-control-box .mode-selector .mode-button.selected {
+  background: rgb(8, 109, 214);
+  color: white;
+  box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
+}
+
+.standard-notes-control-box .mode-selector .mode-button:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  float: left;
+}
+
+.standard-notes-control-box .mode-selector .mode-button:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  float: right;
+}
