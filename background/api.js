@@ -60,7 +60,7 @@ const saveClipping = async (baseContent) => {
 
 // eslint-disable-next-line no-unused-vars
 const updateItemTags = async (item, itemTags) => {
-  const { params, keys, noteTags } = chromeGetPromise({
+  const { params, keys, noteTags } = await chromeGetPromise({
     params: {},
     keys: {},
     noteTags: {}
