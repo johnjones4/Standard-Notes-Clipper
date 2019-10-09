@@ -167,21 +167,3 @@ const fetchItems = async (keys, syncToken, cursorToken, tags, editors) => {
     }
   }
 }
-
-// eslint-disable-next-line no-unused-vars
-const syncInfo = async () => {
-  const { tagSyncToken, noteTags, keys, editors } = await chromeGetPromise({
-    keys: null,
-    tagSyncToken: null,
-    noteTags: {},
-    editors: {}
-  })
-
-  const { tags, editors: _editors, syncToken } = await fetchItems(keys, tagSyncToken, null, noteTags, editors)
-
-  return chromeSetPromise({
-    tagSyncToken: syncToken,
-    noteTags: tags,
-    editors: _editors
-  })
-}

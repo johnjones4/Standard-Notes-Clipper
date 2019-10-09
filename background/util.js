@@ -1,5 +1,3 @@
-/* global syncInfo:readonly */
-
 // eslint-disable-next-line no-unused-vars
 const sendMessagePromise = (tabid, type, payload) => {
   return new Promise((resolve, reject) => {
@@ -79,12 +77,4 @@ const checkForUser = async () => {
     return chrome.runtime.openOptionsPage()
   }
   return items
-}
-
-// eslint-disable-next-line no-unused-vars
-const initializeAddon = async () => {
-  const items = await checkForUser()
-  if (items && items.token) {
-    syncInfo()
-  }
 }

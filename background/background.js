@@ -1,4 +1,4 @@
-/* global StandardFile:readonly checkForUser:readonly sendMessagePromise:readonly saveClipping:readonly chromeSetPromise:readonly getParams:readonly snRequest:readonly syncInfo:readonly initializeAddon:readonly chromeGetPromise:readonly updateItemTags:readonly */
+/* global StandardFile:readonly checkForUser:readonly sendMessagePromise:readonly saveClipping:readonly chromeSetPromise:readonly getParams:readonly snRequest:readonly fetchItems:readonly chromeGetPromise:readonly updateItemTags:readonly */
 
 chrome.browserAction.onClicked.addListener(async tab => {
   try {
@@ -91,6 +91,31 @@ window.login = async (email, password, extraParams) => {
     } else {
       throw error
     }
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+const syncInfo = window.syncInfo = async () => {
+  const { tagSyncToken, noteTags, keys, editors } = await chromeGetPromise({
+    keys: null,
+    tagSyncToken: null,
+    noteTags: {},
+    editors: {}
+  })
+
+  const { tags, editors: _editors, syncToken } = await fetchItems(keys, tagSyncToken, null, noteTags, editors)
+
+  await chromeSetPromise({
+    tagSyncToken: syncToken,
+    noteTags: tags,
+    editors: _editors
+  })
+}
+
+const initializeAddon = async () => {
+  const items = await checkForUser()
+  if (items && items.token) {
+    syncInfo()
   }
 }
 

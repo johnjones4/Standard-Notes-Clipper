@@ -94,7 +94,7 @@ class LoggedIn extends Component {
   }
 
   componentDidMount () {
-    this.loadValues()
+    chrome.extension.getBackgroundPage().syncInfo().then(() => this.loadValues())
   }
 
   async loadValues () {
