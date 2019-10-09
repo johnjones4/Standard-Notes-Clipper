@@ -20,8 +20,7 @@ class Login extends Component {
     }
   }
 
-  login (event) {
-    event.preventDefault()
+  async doLogin () {
     this.setState({
       loggingIn: true,
       error: null
@@ -30,28 +29,32 @@ class Login extends Component {
     if (this.state.twofaKey) {
       extraParams[this.state.twofaKey] = this.state.twofaCode
     }
-    chrome.extension.getBackgroundPage().login(this.state.email, this.state.password, extraParams)
-      .then(response => {
-        if (response && (response.tag === 'mfa-required' || response.tag === 'mfa-invalid')) {
-          this.setState({
-            twofaKey: response.payload.mfa_key,
-            twofaCode: '',
-            loggingIn: false,
-            error: response.message
-          })
-        } else {
-          this.props.stateChanged()
-        }
-      })
-      .catch(err => {
+    try {
+      const response = await chrome.extension.getBackgroundPage().login(this.state.email, this.state.password, extraParams)
+      if (response && (response.tag === 'mfa-required' || response.tag === 'mfa-invalid')) {
         this.setState({
-          twofaKey: null,
+          twofaKey: response.payload.mfa_key,
           twofaCode: '',
           loggingIn: false,
-          error: err.message
+          error: response.message
         })
-        console.error(err)
+      } else {
+        this.props.stateChanged()
+      }
+    } catch (err) {
+      this.setState({
+        twofaKey: null,
+        twofaCode: '',
+        loggingIn: false,
+        error: err.message
       })
+      console.error(err)
+    }
+  }
+
+  login (event) {
+    event.preventDefault()
+    this.doLogin()
     return false
   }
 
@@ -94,13 +97,18 @@ class LoggedIn extends Component {
     this.loadValues()
   }
 
-  loadValues () {
-    chrome.extension.getBackgroundPage().getEditors().then(editors => this.setState({ editors }))
-    chrome.extension.getBackgroundPage().getPreferredEditor().then(preferredEditor => this.setState({ preferredEditor: preferredEditor.uuid }))
+  async loadValues () {
+    const editors = await chrome.extension.getBackgroundPage().getEditors()
+    const preferredEditor = await chrome.extension.getBackgroundPage().getPreferredEditor()
+    this.setState({
+      editors,
+      preferredEditor: preferredEditor.uuid
+    })
   }
 
-  logout () {
-    chrome.extension.getBackgroundPage().logout().then(() => this.props.stateChanged())
+  async logout () {
+    await chrome.extension.getBackgroundPage().logout()
+    this.props.stateChanged()
   }
 
   setPreferredEditor (uuid) {

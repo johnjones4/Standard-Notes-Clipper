@@ -49,7 +49,7 @@
     return window.location.href
   }
 
-  const startClipper = () => {
+  const startClipper = async () => {
     if (clipper) {
       clipper.detach()
     }
@@ -60,14 +60,12 @@
       tags: []
     }
     clipper = new Clipper(content)
-    return clipper.attach()
-      .then(() => {
-        return new Promise((resolve, reject) => {
-          clipper.on('clipped', (content) => {
-            resolve(content)
-          })
-        })
+    await clipper.attach()
+    return new Promise((resolve, reject) => {
+      clipper.on('clipped', (content) => {
+        resolve(content)
       })
+    })
   }
 
   const finishClipper = () => {
@@ -124,19 +122,17 @@
       this.step = 0
     }
 
-    attach () {
+    async attach () {
       this.shadowDomRoot = document.createElement('div')
       this.shadowDomRoot.style.zIndex = 100000
       document.body.appendChild(this.shadowDomRoot)
       this.shadowDomRoot.attachShadow({ mode: 'open' })
-      return fetch(chrome.runtime.getURL('content/content.css'))
-        .then(res => res.text())
-        .then(stylesheet => {
-          const style = document.createElement('style')
-          style.textContent = stylesheet
-          this.shadowDomRoot.shadowRoot.appendChild(style)
-          this.updateState()
-        })
+      const res = await fetch(chrome.runtime.getURL('content/content.css'))
+      const stylesheet = await res.text()
+      const style = document.createElement('style')
+      style.textContent = stylesheet
+      this.shadowDomRoot.shadowRoot.appendChild(style)
+      this.updateState()
     }
 
     detach () {
