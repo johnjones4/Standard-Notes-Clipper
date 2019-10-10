@@ -102,7 +102,7 @@
   z-index: 10000001;
   position: fixed;
   top: 10px;
-  right: -350px;
+  right: 10px;
   width: 300px;
   padding: 10px 10px 0 10px;
   background: white;
@@ -116,10 +116,11 @@
   line-height: 1.25em;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   transition: all 0.5s;
+  transform: translate(400px, 0);
 }
 
 .standard-notes-control-box.active {
-  right: 10px;
+  transform: translate(0, 0);
 }
 
 .standard-notes-control-box h1 {
@@ -143,9 +144,10 @@
   border: none;
   outline: none;
   width: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 2px 0;
+  padding: 5px;
   font-size: 18px;
+  background-color: #F8F8F8;
 }
 
 .standard-notes-control-box input.title {

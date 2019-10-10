@@ -49,6 +49,14 @@
     return window.location.href
   }
 
+  const getText = () => {
+    const selection = window.getSelection()
+    if (selection && selection.rangeCount > 0) {
+      return selection.toString()
+    }
+    return ''
+  }
+
   const startClipper = async () => {
     if (clipper) {
       clipper.detach()
@@ -56,16 +64,17 @@
     const content = {
       title: getTitle(),
       url: getURL(),
-      text: '',
+      text: getText(),
       tags: []
     }
     clipper = new Clipper(content)
-    await clipper.attach()
-    return new Promise((resolve, reject) => {
+    const p = new Promise((resolve, reject) => {
       clipper.on('clipped', (content) => {
         resolve(content)
       })
     })
+    await clipper.attach()
+    return p
   }
 
   const finishClipper = () => {
@@ -132,7 +141,11 @@
       const style = document.createElement('style')
       style.textContent = stylesheet
       this.shadowDomRoot.shadowRoot.appendChild(style)
-      this.updateState()
+      if (this.content.text.length > 0) {
+        this.fire('clipped', this.content)
+      } else {
+        this.updateState()
+      }
     }
 
     detach () {
@@ -257,7 +270,7 @@
       modeSelector.appendChild(this.highlightModeButton)
 
       this.help = document.createElement('p')
-      this.className = 'section direction'
+      this.help.className = 'section direction'
       this.controlBox.appendChild(this.help)
     }
 
@@ -288,6 +301,11 @@
     initElement () {
       this.controlBox = document.createElement('div')
       this.controlBox.className = 'standard-notes-control-box'
+
+      const help = document.createElement('p')
+      help.className = 'section direction'
+      help.textContent = 'Clipped! Customize the name and add tags below, or just click "Skip" to proceed.'
+      this.controlBox.appendChild(help)
 
       const formSection = document.createElement('div')
       formSection.className = 'section forms'
