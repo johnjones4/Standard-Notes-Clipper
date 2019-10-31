@@ -68,6 +68,9 @@
       tags: []
     }
     clipper = new Clipper(content)
+    clipper.on('cancel', (content) => {
+      removeClipper(true)
+    })
     const p = new Promise((resolve, reject) => {
       clipper.on('clipped', (content) => {
         resolve(content)
@@ -89,13 +92,18 @@
     return Promise.reject(new Error('No active clipper'))
   }
 
-  const removeClipper = () => {
+  const removeClipper = (immediate = false) => {
     if (clipper) {
       clipper.setStep(2)
-      setTimeout(() => {
+      const lastStep = () => {
         clipper.detach()
         clipper = null
-      }, 1000)
+      }
+      if (immediate) {
+        lastStep()
+      } else {
+        setTimeout(() => lastStep(), 1000)
+      }
     }
   }
 
@@ -170,6 +178,9 @@
           this.modeController.on('modechange', mode => {
             this.mode = mode
             this.updateMode()
+          })
+          this.modeController.on('cancel', () => {
+            this.fire('cancel')
           })
           this.shadowDomRoot.shadowRoot.appendChild(this.modeController.getElement())
           setTimeout(() => this.modeController.activate(), 100)
@@ -250,6 +261,14 @@
       const modeSelector = document.createElement('div')
       modeSelector.className = 'section mode-selector'
       this.controlBox.appendChild(modeSelector)
+
+      const closeButton = document.createElement('button')
+      closeButton.className = 'close-button'
+      closeButton.innerHTML = '&times;'
+      closeButton.addEventListener('click', () => {
+        this.fire('cancel')
+      }, false)
+      modeSelector.appendChild(closeButton)
 
       this.clipModeButton = document.createElement('button')
       this.clipModeButton.className = 'mode-button'

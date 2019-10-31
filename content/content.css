@@ -203,6 +203,19 @@
   box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
 }
 
+.standard-notes-control-box .close-button {
+  position: absolute;
+  color: white;
+  top: -25px;
+  right: 6px;
+  font-size: 22px;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}
+
 .standard-notes-control-box .mode-selector .mode-button {
   display: inline-block;
   width: 50%;
