@@ -1,12 +1,10 @@
-/* global StandardFile:readonly SFItem:readonly chromeGetPromise:readonly chromeSetPromise:readonly snRequest:readonly getPreferredEditor:readonly */
+/* global StandardFile:readonly SFItem:readonly chromeGetPromise:readonly snRequest:readonly getPreferredEditor:readonly */
 
 // eslint-disable-next-line no-unused-vars
 const saveClipping = async (baseContent) => {
   const item = new SFItem({
     content: Object.assign({}, baseContent, {
-      appData: {},
-      preview_plain: baseContent.text,
-      preview_html: baseContent.text
+      appData: {}
     }),
     content_type: 'Note',
     created_at: new Date()
@@ -108,6 +106,7 @@ const updateItemTags = async (item, itemTags) => {
   })
 }
 
+// eslint-disable-next-line no-unused-vars
 const fetchItems = async (keys, syncToken, cursorToken, tags, editors) => {
   const response = await snRequest(true, 'items/sync', 'POST', {
     items: [],

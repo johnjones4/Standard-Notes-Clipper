@@ -65,6 +65,7 @@
       title: getTitle(),
       url: getURL(),
       text: getText(),
+      preview_plain: getText(),
       tags: []
     }
     clipper = new Clipper(content)
@@ -72,7 +73,7 @@
       removeClipper(true)
     })
     const p = new Promise((resolve, reject) => {
-      clipper.on('clipped', (content) => {
+      clipper.on('clipped', content => {
         resolve(content)
       })
     })
@@ -223,8 +224,9 @@
           this.selector = new HighlightClipperSelector(this.shadowDomRoot)
           break
       }
-      this.selector.on('clipped', text => {
+      this.selector.on('clipped', ({ text, previewPlain }) => {
         this.content.text = text
+        this.content.preview_plain = previewPlain
         this.fire('clipped', this.content)
       })
       this.selector.start()
@@ -428,7 +430,10 @@
       if (element && element !== this.shadowDomRoot) {
         this.finish()
         this.hoverElement.classList.add('selected')
-        this.fire('clipped', element.innerHTML)
+        this.fire('clipped', {
+          text: element.innerHTML,
+          previewPlain: element.textContent
+        })
       }
     }
 
@@ -465,7 +470,10 @@
       this.grabButton.textContent = 'Clip Text'
       this.grabButton.addEventListener('click', () => {
         this.finish()
-        this.fire('clipped', window.getSelection().toString())
+        this.fire('clipped', {
+          text: window.getSelection().toString(),
+          previewPlain: window.getSelection().toString()
+        })
       }, false)
     }
 
