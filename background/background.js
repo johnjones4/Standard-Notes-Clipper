@@ -33,6 +33,7 @@ const getPreferredEditor = window.getPreferredEditor = async () => {
       return editors[uuid]
     }
   }
+  return null
 }
 
 // eslint-disable-next-line no-unused-vars

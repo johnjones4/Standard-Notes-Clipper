@@ -102,7 +102,7 @@ class LoggedIn extends Component {
     const preferredEditor = await chrome.extension.getBackgroundPage().getPreferredEditor()
     this.setState({
       editors,
-      preferredEditor: preferredEditor.uuid
+      preferredEditor: preferredEditor ? preferredEditor.uuid : null
     })
   }
 
