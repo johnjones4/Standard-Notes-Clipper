@@ -1,4 +1,4 @@
-test:
+lint:
 	eslint ./
 
 firefox:

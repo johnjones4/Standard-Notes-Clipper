@@ -11,11 +11,10 @@ job:
   include:
     - stage: lint
       script:
-        - make test
+        - make lint
     - stage: build
       script:
         - make build
-      if: tag IS present
       deploy:
         provider: releases
         api_key:
@@ -29,4 +28,5 @@ job:
 
 stages:
   - lint
-  - build
+  - name: build
+    if: tag IS present
