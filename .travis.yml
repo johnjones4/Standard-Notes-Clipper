@@ -27,6 +27,8 @@ job:
           tags: true
 
 stages:
+  - name: test
+    script: skip
   - lint
   - name: build
     if: tag IS present
