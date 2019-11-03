@@ -37,7 +37,7 @@ const getEditors = window.getEditors = async () => {
     editors: {}
   })
   const arr = []
-  for (let uuid in editors) {
+  for (const uuid in editors) {
     arr.push(editors[uuid])
   }
   return arr

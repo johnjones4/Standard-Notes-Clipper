@@ -34,7 +34,7 @@ class SNError extends Error {
 // eslint-disable-next-line no-unused-vars
 const getParams = (params) => {
   const paramArray = []
-  for (let param in params) {
+  for (const param in params) {
     paramArray.push(param + '=' + encodeURIComponent(params[param]))
   }
   return paramArray.join('&')
@@ -48,7 +48,7 @@ const snRequest = async (auth, path, method, body) => {
     method
   }
   if (token) {
-    params.headers['Authorization'] = 'Bearer ' + token
+    params.headers.Authorization = 'Bearer ' + token
   }
   if (body) {
     params.headers['Content-type'] = 'application/json'

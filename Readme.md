@@ -1,5 +1,8 @@
 # Standard Notes Clipper
 
+[![Build Status](https://travis-ci.org/johnjones4/Standard-Notes-Clipper.svg?branch=master)](https://travis-ci.org/johnjones4/Standard-Notes-Clipper)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 ![Add-on Preview](preview.gif)
 
 This is a browser add-on (Firefox and Chrome) that allows you to clip web pages to your Standard Notes account. The add-on let's you select the portion of the page you want to clip. It then adds the HTML content of that selection to your Standard Notes account.

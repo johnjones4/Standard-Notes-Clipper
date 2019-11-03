@@ -65,7 +65,7 @@ const updateItemTags = async (item, itemTags) => {
   })
 
   const constTagNameMap = {}
-  for (let uuid in noteTags) {
+  for (const uuid in noteTags) {
     const tag = noteTags[uuid]
     constTagNameMap[tag.content.title] = tag
   }
