@@ -4,7 +4,7 @@ node_js:
   - lts/*
 
 before_install:
-  npm install --global web-ext eslint eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node
+  npm install --global standard web-ext eslint eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node
 
 job:
   include:
