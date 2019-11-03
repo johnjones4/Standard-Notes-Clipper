@@ -1,7 +1,7 @@
 language: node_js
 
 before_install:
-  sudo npm install --global web-ext
+  npm install --global web-ext
 
 script:
   web-ext sign --source-dir ./ --ignore-files .travis.yml preview.gif Readme.md .gitignore .git .eslintignore .eslintrc.json
