@@ -7,12 +7,18 @@ before_install:
   - npm install --global web-ext eslint
   - npm install standard eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node
 
+stages:
+  - lint
+  - name: build
+    if: tag IS present
+
 job:
   include:
+    - stage: test
+      script: skip
     - stage: lint
-      script:
-        - make lint
-    - stage: build
+      script: make lint
+    - stage: compile
       script:
         - make build
       deploy:
@@ -25,10 +31,3 @@ job:
         skip_cleanup: true
         on:
           tags: true
-
-stages:
-  - name: test
-    script: skip
-  - lint
-  - name: build
-    if: tag IS present
