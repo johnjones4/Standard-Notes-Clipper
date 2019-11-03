@@ -28,11 +28,6 @@ const getPreferredEditor = window.getPreferredEditor = async () => {
   if (preferredEditor && editors[preferredEditor]) {
     return editors[preferredEditor]
   }
-  for (let uuid in editors) {
-    if (editors[uuid].content.name === 'Plus Editor') {
-      return editors[uuid]
-    }
-  }
   return null
 }
 

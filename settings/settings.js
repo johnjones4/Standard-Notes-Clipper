@@ -121,14 +121,19 @@ class LoggedIn extends Component {
       h('label', {}, 'Preferred Editor'),
       h('select', {
         className: 'form-control',
-        onChange: (event) => this.setPreferredEditor(this.state.editors[event.target.selectedIndex].uuid)
-      }, this.state.editors.map((editor, i) => {
+        onChange: (event) => this.setPreferredEditor(event.target.value)
+      }, [
+        h('option', {
+          value: null,
+          selected: !this.state.preferredEditor
+        }, 'Plain Editor')
+      ].concat(this.state.editors.map((editor, i) => {
         return h('option', {
           key: i,
           value: editor.uuid,
           selected: editor.uuid === this.state.preferredEditor
         }, editor.content.name)
-      }))
+      })))
     )
   }
 
