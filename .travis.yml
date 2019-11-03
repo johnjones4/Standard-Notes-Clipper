@@ -9,10 +9,10 @@ before_install:
 
 job:
   include:
-    - stage: test
+    - stage: lint
       script:
         - make test
-    - stage: compile
+    - stage: build
       script:
         - make build
       if: tag IS present
@@ -26,3 +26,7 @@ job:
         skip_cleanup: true
         on:
           tags: true
+
+stages:
+  - lint
+  - build
