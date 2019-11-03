@@ -9,15 +9,17 @@ before_install:
 job:
   include:
     - stage: test
-      script: eslint ./
+      script:
+        - make test
     - stage: compile
-      script: web-ext sign --source-dir ./ --ignore-files .travis.yml preview.gif Readme.md .gitignore .git .eslintignore .eslintrc.json
+      script:
+        - make build
       if: tag IS present
       deploy:
         provider: releases
         api_key:
           secure: Z9V5mT2SSVdwzgDKDxBvVFSG6bD1VxwcBn4En1kyElrr9e+NHxtHWhVGyGnxbIVicLiMtFKB436U/fuElCeLKBaTtgl/nf8+2GwcT80ta9rWOKwckoAex9Nrdp/fc7rGMwI1tAYpArYcDbWCtraj+PlDrCDXZh68O3h3p1oFubVKeyCM9EbBhEaCke9XXEC0B6gTHoEnD3aB6NjuEICKQ6KUxLIFdijDLosmi685Cmbm2CjXQJxDDwUtWfzOLvYbWLGD5/UoYaiJ1w60X3xyq+me7SsgwVSfuYiWywj0DjOjjvSFkxzeDN/Dm9OYIAujJq4Wh91QfRYRJlFv49Ikyxiep8a6kWzXWHPdx0fagew8Tocf9ZJfvAvBF9cfaaRF/H15ACuZOF9pHQIKe6PamyT9NS5IFAPhNYnMFj70WzvqJIOm7tehNeP1skBj2H6gINtO786gHXw5bTYwhHu4sozdqB0QiENibJb6z1KLDgV0pGpGCv0/SW6Z+0l53hcFUokCQeNofzaihTOrJAO5DCr3vxZiaPj0XAIpQDpts4GR5J8U7fybhkqcH97dlH/hL9iPaoE5rH4NIAEhzBwfiaRowqOc2GJyurdCPPgBst71wxzK50JmZRrZo6Tm9kX73jEbtFDhyggyuSpdpvi7OvRghWSRwgqBomA/wFZoCE0=
         file_glob: true
-        file: web-ext-artifacts/standard_notes_clipper-*-an+fx.xpi
+        file: ./web-ext-artifacts/standard_notes_clipper-*-an+fx.xpi
         on:
           tags: true
