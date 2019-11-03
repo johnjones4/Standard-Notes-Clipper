@@ -8,9 +8,9 @@ before_install:
 
 job:
   include:
-    - stage: lint
+    - stage: test
       script: eslint ./
-    - stage: build
+    - stage: compile
       script: web-ext sign --source-dir ./ --ignore-files .travis.yml preview.gif Readme.md .gitignore .git .eslintignore .eslintrc.json
       if: tag IS present
     - stage: deploy
