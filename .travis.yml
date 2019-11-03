@@ -6,9 +6,15 @@ node_js:
 before_install:
   npm install --global web-ext eslint eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node
 
-script:
-  eslint ./
-  web-ext sign --source-dir ./ --ignore-files .travis.yml preview.gif Readme.md .gitignore .git .eslintignore .eslintrc.json
+job:
+  include:
+    - stage: lint
+      script: eslint ./
+    - stage: build
+      script: web-ext sign --source-dir ./ --ignore-files .travis.yml preview.gif Readme.md .gitignore .git .eslintignore .eslintrc.json
+      if: tag IS present
+    - stage: deploy
+      if: tag IS present
 
 deploy:
   provider: releases
