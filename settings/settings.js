@@ -188,9 +188,42 @@ class SettingsPage extends Component {
   }
 
   render () {
-    return h('div', { className: 'container' },
-      h('div', { className: 'row justify-content-md-center' },
-        this.renderStateElement()
+    return h('div', { },
+      h('ul', {
+        className: 'nav justify-content-end'
+      },[
+        h('li', {
+          className: 'nav-item'
+        },[
+          h('a', {
+            className: 'nav-link',
+            href: 'https://standardnotes.org/',
+            target: '_blank'
+          },'Standard Notes Website'),
+        ]),
+        h('li', {
+          className: 'nav-item'
+        },[
+          h('a', {
+            className: 'nav-link',
+            href: 'https://github.com/johnjones4/Standard-Notes-Clipper',
+            target: '_blank'
+          },'GitHub Project'),
+        ]),
+        h('li', {
+          className: 'nav-item'
+        },[
+          h('a', {
+            className: 'nav-link',
+            href: 'https://github.com/johnjones4/Standard-Notes-Clipper/issues',
+            target: '_blank'
+          },'Support'),
+        ]),
+      ]),
+      h('div', { className: 'container' },
+        h('div', { className: 'row justify-content-md-center' },
+          this.renderStateElement()
+        )
       )
     )
   }
