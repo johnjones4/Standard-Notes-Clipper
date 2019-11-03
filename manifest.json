@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Standard Notes Clipper",
   "description": "Clip content you find on the web and save it to your Standard Notes account",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "permissions": [
     "activeTab",
     "storage",

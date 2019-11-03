@@ -18,7 +18,7 @@ job:
       script: skip
     - stage: lint
       script: make lint
-    - stage: compile
+    - stage: build
       script:
         - make build
       deploy:
