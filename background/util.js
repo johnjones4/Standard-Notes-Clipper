@@ -10,7 +10,7 @@ const sendMessagePromise = (tabid, type, payload) => {
 // eslint-disable-next-line no-unused-vars
 const chromeSetPromise = (setParams) => {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.set(setParams, () => {
+    chrome.storage.local.set(setParams, () => {
       resolve()
     })
   })
@@ -18,7 +18,7 @@ const chromeSetPromise = (setParams) => {
 
 const chromeGetPromise = (getParams) => {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(getParams, items => {
+    chrome.storage.local.get(getParams, items => {
       resolve(items)
     })
   })

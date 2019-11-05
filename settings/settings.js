@@ -88,7 +88,7 @@ class LoggedIn extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      editors: [],
+      editors: null,
       preferredEditor: null
     }
   }
@@ -117,7 +117,7 @@ class LoggedIn extends Component {
   }
 
   renderEditorSetting () {
-    return h('form-group', {},
+    return this.state.editors ? h('form-group', {},
       h('label', {}, 'Preferred Editor'),
       h('select', {
         className: 'form-control',
@@ -134,7 +134,7 @@ class LoggedIn extends Component {
           selected: editor.uuid === this.state.preferredEditor
         }, editor.content.name)
       })))
-    )
+    ) : 'Loading ...'
   }
 
   render () {
@@ -163,7 +163,7 @@ class SettingsPage extends Component {
   }
 
   checkState () {
-    chrome.storage.sync.get({
+    chrome.storage.local.get({
       token: null,
       params: null,
       keys: null
