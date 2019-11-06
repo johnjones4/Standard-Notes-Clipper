@@ -1,5 +1,6 @@
-// eslint-disable-next-line no-unused-vars
-const sendMessagePromise = (tabid, type, payload) => {
+import SNError from './SNError'
+
+export const sendMessagePromise = (tabid, type, payload) => {
   return new Promise((resolve, reject) => {
     chrome.tabs.sendMessage(tabid, { type, payload }, (response) => {
       resolve(response)
@@ -7,8 +8,7 @@ const sendMessagePromise = (tabid, type, payload) => {
   })
 }
 
-// eslint-disable-next-line no-unused-vars
-const chromeSetPromise = (setParams) => {
+export const chromeSetPromise = (setParams) => {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.set(setParams, () => {
       resolve()
@@ -24,15 +24,7 @@ const chromeGetPromise = (getParams) => {
   })
 }
 
-class SNError extends Error {
-  constructor (message, serverInfo) {
-    super(message, null, null)
-    this.serverInfo = serverInfo
-  }
-}
-
-// eslint-disable-next-line no-unused-vars
-const getParams = (params) => {
+export const getParams = (params) => {
   const paramArray = []
   for (const param in params) {
     paramArray.push(param + '=' + encodeURIComponent(params[param]))
@@ -40,8 +32,7 @@ const getParams = (params) => {
   return paramArray.join('&')
 }
 
-// eslint-disable-next-line no-unused-vars
-const snRequest = async (auth, path, method, body) => {
+export const snRequest = async (auth, path, method, body) => {
   const token = auth ? (await chromeGetPromise(['token'])).token : null
   const params = {
     headers: {},
@@ -66,8 +57,7 @@ const snRequest = async (auth, path, method, body) => {
   return res
 }
 
-// eslint-disable-next-line no-unused-vars
-const checkForUser = async () => {
+export const checkForUser = async () => {
   const items = await chromeGetPromise({
     token: null,
     params: null,

@@ -1,7 +1,13 @@
-/* global StandardFile:readonly SFItem:readonly chromeGetPromise:readonly snRequest:readonly getPreferredEditor:readonly */
+/* global StandardFile:readonly SFItem:readonly */
+import {
+  chromeGetPromise,
+  snRequest
+} from './util'
+import {
+  getPreferredEditor
+} from './lib/storage'
 
-// eslint-disable-next-line no-unused-vars
-const saveClipping = async (baseContent) => {
+export const saveClipping = async (baseContent) => {
   const item = new SFItem({
     content: Object.assign({}, baseContent, {
       appData: {}
@@ -56,8 +62,7 @@ const saveClipping = async (baseContent) => {
   return item
 }
 
-// eslint-disable-next-line no-unused-vars
-const updateItemTags = async (item, itemTags) => {
+export const updateItemTags = async (item, itemTags) => {
   const { params, keys, noteTags } = await chromeGetPromise({
     params: {},
     keys: {},
@@ -106,8 +111,7 @@ const updateItemTags = async (item, itemTags) => {
   })
 }
 
-// eslint-disable-next-line no-unused-vars
-const fetchItems = async (keys, syncToken, cursorToken, tags, editors) => {
+export const fetchItems = async (keys, syncToken, cursorToken, tags, editors) => {
   const response = await snRequest(true, 'items/sync', 'POST', {
     items: [],
     sync_token: syncToken,
