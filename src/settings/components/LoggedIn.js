@@ -4,7 +4,7 @@ export default class LoggedIn extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      editors: [],
+      editors: null,
       preferredEditor: null
     }
   }
@@ -33,6 +33,9 @@ export default class LoggedIn extends Component {
   }
 
   renderEditorSetting () {
+    if (!this.state.editors) {
+      return 'Loading ...'
+    }
     return (
       <div className='form-group'>
         <label>Preferred Editor</label>

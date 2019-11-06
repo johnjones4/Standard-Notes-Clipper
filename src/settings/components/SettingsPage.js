@@ -15,7 +15,7 @@ export default class SettingsPage extends Component {
   }
 
   checkState () {
-    chrome.storage.sync.get({
+    chrome.storage.local.get({
       token: null,
       params: null,
       keys: null

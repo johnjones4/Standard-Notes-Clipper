@@ -10,7 +10,7 @@ export const sendMessagePromise = (tabid, type, payload) => {
 
 export const chromeSetPromise = (setParams) => {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.set(setParams, () => {
+    chrome.storage.local.set(setParams, () => {
       resolve()
     })
   })
@@ -18,7 +18,7 @@ export const chromeSetPromise = (setParams) => {
 
 const chromeGetPromise = (getParams) => {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(getParams, items => {
+    chrome.storage.local.get(getParams, items => {
       resolve(items)
     })
   })
