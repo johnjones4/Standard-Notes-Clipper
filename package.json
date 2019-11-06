@@ -1,0 +1,48 @@
+{
+  "name": "standard-notes-clipper",
+  "version": "1.0.8",
+  "description": "[![Build Status](https://travis-ci.org/johnjones4/Standard-Notes-Clipper.svg?branch=master)](https://travis-ci.org/johnjones4/Standard-Notes-Clipper) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)",
+  "main": "index.js",
+  "scripts": {
+    "webpack": "webpack --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnjones4/Standard-Notes-Clipper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnjones4/Standard-Notes-Clipper/issues"
+  },
+  "homepage": "https://github.com/johnjones4/Standard-Notes-Clipper#readme",
+  "devDependencies": {
+    "autoprefixer": "^7.1.3",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-babili": "^0.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.15",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^0.28.5",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^2.30.1",
+    "node-sass": "^4.5.0",
+    "postcss-loader": "^2.0.6",
+    "sirv-cli": "^0.2.3",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^0.18.2",
+    "sw-precache-webpack-plugin": "^0.11.4",
+    "webpack": "^3.7.0",
+    "webpack-dev-server": "^2.9.0"
+  },
+  "dependencies": {
+    "preact": "^10.0.1",
+    "preact-render-to-string": "^5.1.0",
+    "preact-router": "^3.0.0"
+  }
+}
