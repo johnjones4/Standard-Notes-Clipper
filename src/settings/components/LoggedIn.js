@@ -1,4 +1,4 @@
-import { Component, h } from 'preact'
+import { Component } from 'preact'
 
 export default class LoggedIn extends Component {
   constructor (props) {
@@ -33,35 +33,30 @@ export default class LoggedIn extends Component {
   }
 
   renderEditorSetting () {
-    return h('form-group', {},
-      h('label', {}, 'Preferred Editor'),
-      h('select', {
-        className: 'form-control',
-        onChange: (event) => this.setPreferredEditor(event.target.value)
-      }, [
-        h('option', {
-          value: null,
-          selected: !this.state.preferredEditor
-        }, 'Plain Editor')
-      ].concat(this.state.editors.map((editor, i) => {
-        return h('option', {
-          key: i,
-          value: editor.uuid,
-          selected: editor.uuid === this.state.preferredEditor
-        }, editor.content.name)
-      })))
+    return (
+      <div className='form-group'>
+        <label>Preferred Editor</label>
+        <select className='form-control' onChange={(event) => this.setPreferredEditor(event.target.value)}>
+          <option value={null} selected={!this.state.preferredEditor}>Plain Editor</option>
+          { this.state.editors.map((editor, i) => {
+            return (<option key={i} value={editor.uuid} selected={editor.uuid === this.state.preferredEditor}>{ editor.content.name }</option>)
+          }) }
+        </select>
+      </div>
     )
   }
 
   render () {
-    return h('div', { className: 'col-lg-10' },
-      h('h1', {}, 'Standard Notes Clipper Settings'),
-      h('fieldset', { className: 'table table-striped' },
-        h('legend', {}, 'Settings'),
-        this.renderEditorSetting()
-      ),
-      h('hr'),
-      h('button', { className: 'btn btn-danger', onClick: () => this.logout() }, 'Logout')
+    return (
+      <div className='col-lg-10'>
+        <h1>Standard Notes Clipper Settings</h1>
+        <fieldset>
+          <legend>Settings</legend>
+          { this.renderEditorSetting() }
+        </fieldset>
+        <hr/>
+        <button className='btn btn-danger' onClick={ () => this.logout() }>Logout</button>
+      </div>
     )
   }
 }

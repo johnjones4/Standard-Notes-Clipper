@@ -29,6 +29,7 @@
     "clean-webpack-plugin": "^0.1.15",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^0.28.5",
+    "eslint-config-standard-react": "^9.2.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^2.30.1",
     "node-sass": "^4.5.0",

@@ -1,4 +1,4 @@
-import { Component, h } from 'preact'
+import { Component } from 'preact'
 import FormField from './FormField'
 
 export default class Login extends Component {
@@ -53,25 +53,27 @@ export default class Login extends Component {
   }
 
   renderLoginForm (title, fields, button) {
-    return h('div', { className: 'col-lg-5' },
-      h('form', { className: 'card', onSubmit: (event) => this.login(event) },
-        h('div', { className: 'card-body' },
-          h('h1', { className: 'text-center' }, title),
-          this.state.error ? h('div', { role: 'alert', className: 'alert alert-danger' }, this.state.error) : null,
-          h('div', {}, fields),
-          h('button', { className: 'btn btn-primary btn-block', disabled: this.state.loggingIn, type: 'submit', onClick: (event) => this.login(event) }, button)
-        )
-      )
+    return (
+      <div className='col-lg-5'>
+        <form className='card' onSubmit={(event) => this.login(event)}>
+          <div className='card-body'>
+            <h1 className='text-center'>{ title }</h1>
+            { this.state.error ? (<div className='alert alert-danger'>{ this.state.error }</div>) : null }
+            <div>{ fields }</div>
+            <buton className='btn btn-primary btn-block' disabled={this.state.loggingIn} type='submit' onClick={(event) => this.login(event)}>{ button }</buton>
+          </div>
+        </form>
+      </div>
     )
   }
 
   render () {
     const title = this.state.twofaKey ? 'Two Factor Authentication' : 'Login'
     const fields = this.state.twofaKey ? [
-      h(FormField, { required: true, name: 'code', label: 'Code', type: 'text', value: this.state.twofaCode, onChange: (event) => this.setState({ twofaCode: event.target.value }) })
+      (<FormField required={true} name='code' label='Code' type='text' value={this.state.twofaCode} onChange={event => this.setState({ twofaCode: event.target.value })} />)
     ] : [
-      h(FormField, { required: true, name: 'email', label: 'E-mail', type: 'email', value: this.state.email, onChange: (event) => this.setState({ email: event.target.value }) }),
-      h(FormField, { required: true, name: 'password', label: 'Password', type: 'password', value: this.state.password, onChange: (event) => this.setState({ password: event.target.value }) })
+      (<FormField required={true} name='email' label='E-mail' type='email' value={this.state.email} onChange={event => this.setState({ email: event.target.value })} />),
+      (<FormField required={true} name='password' label='Password' type='password' value={this.state.password} onChange={event => this.setState({ password: event.target.value })} />)
     ]
     const button = this.state.twofaKey ? 'Submit' : 'Login'
     return this.renderLoginForm(title, fields, button)

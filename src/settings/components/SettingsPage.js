@@ -1,4 +1,4 @@
-import { Component, h } from 'preact'
+import { Component } from 'preact'
 import Login from './Login'
 import LoggedIn from './LoggedIn'
 
@@ -31,52 +31,34 @@ export default class SettingsPage extends Component {
   renderStateElement () {
     switch (this.state.mode) {
       case 'login':
-        return h(Login, { stateChanged: () => this.checkState() })
+        return (<Login stateChanged={() => this.checkState()} />)
       case 'loggedin':
-        return h(LoggedIn, { stateChanged: () => this.checkState() })
+        return (<LoggedIn stateChanged={() => this.checkState()} />)
       default:
         return null
     }
   }
 
   render () {
-    return h('div', { },
-      h('ul', {
-        className: 'nav justify-content-end'
-      }, [
-        h('li', {
-          className: 'nav-item'
-        }, [
-          h('a', {
-            className: 'nav-link',
-            href: 'https://standardnotes.org/',
-            target: '_blank'
-          }, 'Standard Notes Website')
-        ]),
-        h('li', {
-          className: 'nav-item'
-        }, [
-          h('a', {
-            className: 'nav-link',
-            href: 'https://github.com/johnjones4/Standard-Notes-Clipper',
-            target: '_blank'
-          }, 'GitHub Project')
-        ]),
-        h('li', {
-          className: 'nav-item'
-        }, [
-          h('a', {
-            className: 'nav-link',
-            href: 'https://github.com/johnjones4/Standard-Notes-Clipper/issues',
-            target: '_blank'
-          }, 'Support')
-        ])
-      ]),
-      h('div', { className: 'container' },
-        h('div', { className: 'row justify-content-md-center' },
-          this.renderStateElement()
-        )
-      )
+    return (
+      <div>
+        <ul className='nav justify-content-end'>
+          <li className='nav-item'>
+            <a className='nav-link' href='https://standardnotes.org/' target='_blank'>{ 'Standard Notes Website' }</a>
+          </li>
+          <li className='nav-item'>
+            <a className='nav-link' href='https://github.com/johnjones4/Standard-Notes-Clipper' target='_blank'>{ 'GitHub Project' }</a>
+          </li>
+          <li className='nav-item'>
+            <a className='nav-link' href='https://github.com/johnjones4/Standard-Notes-Clipper/issues' target='_blank'>{ 'Support' }</a>
+          </li>
+        </ul>
+        <div className='container'>
+          <div className='row justify-content-md-center'>
+            { this.renderStateElement() }
+          </div>
+        </div>
+      </div>
     )
   }
 }
