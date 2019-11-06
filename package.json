@@ -42,6 +42,7 @@
     "webpack-dev-server": "^2.9.0"
   },
   "dependencies": {
+    "bootstrap": "^4.3.1",
     "preact": "^10.0.1",
     "preact-render-to-string": "^5.1.0",
     "preact-router": "^3.0.0"
