@@ -63,6 +63,9 @@ export default class Login extends Component {
             <buton className='btn btn-primary btn-block' disabled={this.state.loggingIn} type='submit' onClick={(event) => this.login(event)}>{ button }</buton>
           </div>
         </form>
+        <p className='security-disclaimer text-muted'>
+          <small>Your encrypted login credentials and 2FA code (when applicable) are sent directly to the Standard Notes server at sync.standardnotes.org and never stored locally on this machine. This add-on only stores an encryption key and the authentication token data sent back from the server to make future requests. This add-on also does not store any note data - only editor and tag data.</small>
+        </p>
       </div>
     )
   }

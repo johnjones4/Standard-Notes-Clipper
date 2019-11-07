@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch --progress --config webpack.config.js",
     "lint": "eslint src/background && eslint src/content && eslint src/settings",
     "clean": "rm -rf build",
     "package-firefox": "web-ext sign --source-dir build && mv web-ext-artifacts/standard_notes_clipper-*-an+fx.xpi web-ext-artifacts/firefox.xpi",
