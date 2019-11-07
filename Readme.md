@@ -13,8 +13,8 @@ Please use and share your feedback! And, of course, contributions are welcome!
 
 ### Firefox
 
-Go to _Tools_ > _Add-ons_, then click the gear icon and select _Debug Addons_ from the menu. On the _Add-ons_ debug page, click _Load Temporary Add-on..._ and drive to folder containing this project and select the _manifest.json_ file.
+Download the latest `firefox.xpi` file from [releases](https://github.com/johnjones4/Standard-Notes-Clipper/releases). Then, go to _Tools_ > _Add-ons_, and click the gear icon and select _Install Add-on From File_ from the menu. Now go to your downloads folder and select the `firefox.xpi` file.
 
 ### Chrome
 
-Go to _Window_ > _Extensions_, then click _Load unpacked_ and drive to folder containing this project and click _Select_.
+Download the latest `chrome.zip` file from [releases](https://github.com/johnjones4/Standard-Notes-Clipper/releases) and unzip it. Go to _Window_ > _Extensions_, then click _Load unpacked_ and drive to the unzipped folder and click _Select_.
