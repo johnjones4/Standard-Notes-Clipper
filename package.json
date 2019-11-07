@@ -1,6 +1,6 @@
 {
   "name": "standard-notes-clipper",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Clip content you find on the web and save it to your Standard Notes account",
   "main": "index.js",
   "scripts": {
@@ -46,8 +46,7 @@
     "style-loader": "^0.18.2",
     "transform-json-webpack-plugin": "0.0.1",
     "web-ext": "^3.2.1",
-    "webpack": "^3.7.0",
-    "webpack-dev-server": "^2.9.0"
+    "webpack": "^3.7.0"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
