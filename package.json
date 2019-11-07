@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "lint": "eslint src",
+    "lint": "eslint src/background && eslint src/content && eslint src/settings",
     "clean": "rm -rf build",
     "package-firefox": "web-ext sign --source-dir build"
   },
