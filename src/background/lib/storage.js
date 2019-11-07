@@ -1,7 +1,7 @@
 import {
   chromeGetPromise,
   chromeSetPromise
-} from './lib/util'
+} from './util'
 
 export const getPreferredEditor = async () => {
   const { editors, preferredEditor } = await chromeGetPromise({

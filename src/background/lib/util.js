@@ -16,7 +16,7 @@ export const chromeSetPromise = (setParams) => {
   })
 }
 
-const chromeGetPromise = (getParams) => {
+export const chromeGetPromise = (getParams) => {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(getParams, items => {
       resolve(items)

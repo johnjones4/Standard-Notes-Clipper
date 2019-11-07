@@ -1,4 +1,4 @@
-import 'preact'
+import { h } from 'preact'
 
 export default (props) => {
   return (

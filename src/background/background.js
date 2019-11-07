@@ -1,4 +1,10 @@
-/* global StandardFile:readonly :readonly :readonly :readonly :readonly :readonly :readonly :readonly :readonly :readonly */
+import regeneratorRuntime from 'regenerator-runtime'
+import { StandardFile } from 'standard-file-js'
+import {
+  getPreferredEditor,
+  getEditors,
+  setPreferredEditor
+} from './lib/storage'
 import {
   checkForUser,
   sendMessagePromise,
@@ -12,12 +18,9 @@ import {
   fetchItems,
   updateItemTags
 } from './lib/api'
-import {
-  getPreferredEditor,
-  getEditors,
-  setPreferredEditor
-} from './lib/storage'
+import 'lodash'
 
+window.regeneratorRuntime = regeneratorRuntime
 window.getPreferredEditor = getPreferredEditor
 window.getEditors = getEditors
 window.setPreferredEditor = setPreferredEditor

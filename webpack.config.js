@@ -2,7 +2,7 @@ const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const _resolve = {
-  extensions: ['.jsx', '.js', '.json', '.less'],
+  extensions: ['.jsx', '.js'],
   modules: [
     path.resolve(__dirname, 'node_modules'),
     'node_modules'

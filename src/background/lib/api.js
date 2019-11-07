@@ -1,11 +1,11 @@
-/* global StandardFile:readonly SFItem:readonly */
+import { StandardFile, SFItem } from 'standard-file-js'
 import {
   chromeGetPromise,
   snRequest
 } from './util'
 import {
   getPreferredEditor
-} from './lib/storage'
+} from './storage'
 
 export const saveClipping = async (baseContent) => {
   const item = new SFItem({
