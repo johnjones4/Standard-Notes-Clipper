@@ -70,10 +70,10 @@ export default class Login extends Component {
   render () {
     const title = this.state.twofaKey ? 'Two Factor Authentication' : 'Login'
     const fields = this.state.twofaKey ? [
-      (<FormField required={true} name='code' label='Code' type='text' value={this.state.twofaCode} onChange={event => this.setState({ twofaCode: event.target.value })} />)
+      (<FormField required name='code' label='Code' type='text' value={this.state.twofaCode} onChange={event => this.setState({ twofaCode: event.target.value })} />)
     ] : [
-      (<FormField required={true} name='email' label='E-mail' type='email' value={this.state.email} onChange={event => this.setState({ email: event.target.value })} />),
-      (<FormField required={true} name='password' label='Password' type='password' value={this.state.password} onChange={event => this.setState({ password: event.target.value })} />)
+      (<FormField required name='email' label='E-mail' type='email' value={this.state.email} onChange={event => this.setState({ email: event.target.value })} />),
+      (<FormField required name='password' label='Password' type='password' value={this.state.password} onChange={event => this.setState({ password: event.target.value })} />)
     ]
     const button = this.state.twofaKey ? 'Submit' : 'Login'
     return this.renderLoginForm(title, fields, button)

@@ -1,10 +1,13 @@
 {
   "name": "standard-notes-clipper",
   "version": "1.0.8",
-  "description": "[![Build Status](https://travis-ci.org/johnjones4/Standard-Notes-Clipper.svg?branch=master)](https://travis-ci.org/johnjones4/Standard-Notes-Clipper) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)",
+  "description": "Clip content you find on the web and save it to your Standard Notes account",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "lint": "eslint src",
+    "clean": "rm -rf build",
+    "package-firefox": "web-ext sign --source-dir build"
   },
   "repository": {
     "type": "git",
@@ -27,7 +30,7 @@
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^0.28.5",
     "eslint-config-standard": "^14.1.0",
-    "eslint-config-standard-react": "^9.2.0",
+    "eslint-config-standard-preact": "^1.1.6",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
@@ -39,7 +42,7 @@
     "postcss-loader": "^2.0.6",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.18.2",
-    "sw-precache-webpack-plugin": "^0.11.4",
+    "transform-json-webpack-plugin": "0.0.1",
     "webpack": "^3.7.0",
     "webpack-dev-server": "^2.9.0"
   },

@@ -6,6 +6,7 @@ import {
 import {
   getPreferredEditor
 } from './storage'
+import _ from 'lodash'
 
 export const saveClipping = async (baseContent) => {
   const item = new SFItem({
@@ -70,10 +71,10 @@ export const updateItemTags = async (item, itemTags) => {
   })
 
   const constTagNameMap = {}
-  for (const uuid in noteTags) {
+  _.keys(noteTags).forEach(uuid => {
     const tag = noteTags[uuid]
     constTagNameMap[tag.content.title] = tag
-  }
+  })
   const saveItems = [item]
   itemTags.forEach(tagName => {
     let tagItem = null

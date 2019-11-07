@@ -1,6 +1,6 @@
 {
   "parser": "babel-eslint",
-  "extends": ["standard", "standard-react"],
+  "extends": ["standard"],
   "globals": {
     "chrome": "readonly"
   },

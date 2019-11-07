@@ -57,8 +57,8 @@ export default class LoggedIn extends Component {
           <legend>Settings</legend>
           { this.renderEditorSetting() }
         </fieldset>
-        <hr/>
-        <button className='btn btn-danger' onClick={ () => this.logout() }>Logout</button>
+        <hr />
+        <button className='btn btn-danger' onClick={() => this.logout()}>Logout</button>
       </div>
     )
   }

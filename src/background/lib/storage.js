@@ -2,6 +2,7 @@ import {
   chromeGetPromise,
   chromeSetPromise
 } from './util'
+import _ from 'lodash'
 
 export const getPreferredEditor = async () => {
   const { editors, preferredEditor } = await chromeGetPromise({
@@ -19,9 +20,9 @@ export const getEditors = async () => {
     editors: {}
   })
   const arr = []
-  for (const uuid in editors) {
+  _.keys(editors).forEach(uuid => {
     arr.push(editors[uuid])
-  }
+  })
   return arr
 }
 

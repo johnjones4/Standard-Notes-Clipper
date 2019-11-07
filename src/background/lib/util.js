@@ -1,4 +1,5 @@
 import SNError from './SNError'
+import _ from 'lodash'
 
 export const sendMessagePromise = (tabid, type, payload) => {
   return new Promise((resolve, reject) => {
@@ -26,9 +27,9 @@ export const chromeGetPromise = (getParams) => {
 
 export const getParams = (params) => {
   const paramArray = []
-  for (const param in params) {
+  _.keys(params).forEach(param => {
     paramArray.push(param + '=' + encodeURIComponent(params[param]))
-  }
+  })
   return paramArray.join('&')
 }
 

@@ -1,5 +1,7 @@
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const TransformJson = require('transform-json-webpack-plugin')
+const package = require('./package.json')
 
 const _resolve = {
   extensions: ['.jsx', '.js'],
@@ -77,7 +79,15 @@ module.exports = [
           to: './',
           context: 'static/'
         }
-      ])
+      ]),
+      new TransformJson({
+        source: path.resolve(__dirname, 'src', 'manifest.json'),
+        filename: 'manifest.json',
+        object: {
+          description: package.description,
+          version: package.version
+        }
+      })
     ],
     resolve: _resolve,
     module: _module

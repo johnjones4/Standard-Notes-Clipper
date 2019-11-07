@@ -6,7 +6,7 @@ export default (props) => {
       <label for={props.name}>
         { props.label }
       </label>
-      <input onChange={(event) => props.onChange(event)} required={props.required} name={props.name} id={props.name} type={props.type} placeholder={props.placeholder} className={'form-control'} value={props.value } />
+      <input onChange={(event) => props.onChange(event)} required={props.required} name={props.name} id={props.name} type={props.type} placeholder={props.placeholder} className={'form-control'} value={props.value} />
     </div>
   )
 }
