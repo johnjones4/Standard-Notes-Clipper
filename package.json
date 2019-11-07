@@ -9,7 +9,7 @@
     "lint": "eslint src/background && eslint src/content && eslint src/settings",
     "clean": "rm -rf build",
     "package-firefox": "web-ext sign --source-dir build && mv web-ext-artifacts/standard_notes_clipper-*-an+fx.xpi web-ext-artifacts/firefox.xpi",
-    "package-chrome": "zip -r chrome.zip build"
+    "package-chrome": "cp -R build chrome && zip -r chrome.zip chrome"
   },
   "repository": {
     "type": "git",
