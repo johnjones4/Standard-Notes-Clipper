@@ -4,7 +4,7 @@ import {
   getPreferredEditor,
   getEditors,
   setPreferredEditor
-} from './lib/storage'
+} from './lib/editorManager'
 import {
   checkForUser,
   sendMessagePromise,
@@ -19,29 +19,31 @@ import {
   updateItemTags
 } from './lib/api'
 import 'lodash'
+import {
+  contextMenuId,
+  addContextMenu,
+  enableContextMenu,
+  disableContextMenu
+} from './lib/contextMenuManager'
 
 window.regeneratorRuntime = regeneratorRuntime
 window.getPreferredEditor = getPreferredEditor
 window.getEditors = getEditors
 window.setPreferredEditor = setPreferredEditor
+window.enableContextMenu = enableContextMenu
+window.disableContextMenu = disableContextMenu
+
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === contextMenuId) {
+    await doClip(tab, {
+      text: info.selectionText,
+      preview_plain: info.selectionText
+    })
+  }
+})
 
 chrome.browserAction.onClicked.addListener(async tab => {
-  try {
-    await checkForUser()
-    await syncInfo()
-    const content = await sendMessagePromise(tab.id, 'clip', null)
-    const item = await saveClipping(content)
-    const updatedContent = await sendMessagePromise(tab.id, 'saved', null)
-    if (updatedContent) {
-      item.content.title = updatedContent.title
-      item.content.text = updatedContent.text
-      await updateItemTags(item, updatedContent.tags)
-    }
-    await sendMessagePromise(tab.id, 'done')
-  } catch (err) {
-    console.error(err)
-    await sendMessagePromise(tab.id, 'error', { error: err.message })
-  }
+  await doClip(tab, null)
 })
 
 window.logout = () => {
@@ -84,6 +86,25 @@ window.login = async (email, password, extraParams) => {
   }
 }
 
+const doClip = async (tab, _content) => {
+  try {
+    await checkForUser()
+    await syncInfo()
+    const content = await sendMessagePromise(tab.id, 'clip', { content: _content })
+    const item = await saveClipping(content)
+    const updatedContent = await sendMessagePromise(tab.id, 'saved', null)
+    if (updatedContent) {
+      item.content.title = updatedContent.title
+      item.content.text = updatedContent.text
+      await updateItemTags(item, updatedContent.tags)
+    }
+    await sendMessagePromise(tab.id, 'done')
+  } catch (err) {
+    console.error(err)
+    await sendMessagePromise(tab.id, 'error', { error: err.message })
+  }
+}
+
 // eslint-disable-next-line no-unused-vars
 const syncInfo = window.syncInfo = async () => {
   const { tagSyncToken, noteTags, keys, editors } = await chromeGetPromise({
@@ -102,11 +123,21 @@ const syncInfo = window.syncInfo = async () => {
   })
 }
 
+const setupContextMenu = async () => {
+  const { contextMenu } = await chromeGetPromise({
+    contextMenu: true
+  })
+  if (contextMenu) {
+    addContextMenu()
+  }
+}
+
 const initializeAddon = async () => {
   const items = await checkForUser()
   if (items && items.token) {
     syncInfo()
   }
+  await setupContextMenu()
 }
 
 initializeAddon()

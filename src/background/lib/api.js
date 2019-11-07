@@ -5,7 +5,7 @@ import {
 } from './util'
 import {
   getPreferredEditor
-} from './storage'
+} from './editorManager'
 import _ from 'lodash'
 
 export const saveClipping = async (baseContent) => {

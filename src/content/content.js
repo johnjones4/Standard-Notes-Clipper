@@ -4,31 +4,28 @@ import Clipper from './lib/Clipper'
 window.regeneratorRuntime = regeneratorRuntime
 let clipper = null
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  switch (request.type) {
-    case 'clip':
-      try {
-        startClipper()
-          .then(content => sendResponse(content))
-          .catch(err => console.error(err))
-      } catch (err) {
-        alert(err.message)
-      }
-      return true
-    case 'saved':
-      finishClipper()
-        .then(content => sendResponse(content))
-        .catch(err => console.error(err))
-      return true
-    case 'done':
-      removeClipper()
-      return true
-    case 'error':
-      alert(request.payload.error)
-      clipper = null
-      return false
-    default:
-      return false
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  try {
+    switch (request.type) {
+      case 'clip':
+        sendResponse(await startClipper(request.payload.content ? request.payload.content : null))
+        return true
+      case 'saved':
+        sendResponse(await finishClipper())
+        return true
+      case 'done':
+        removeClipper()
+        return true
+      case 'error':
+        alert(request.payload.error)
+        clipper = null
+        return false
+      default:
+        return false
+    }
+  } catch (err) {
+    alert(err.message)
+    clipper = null
   }
 })
 
@@ -60,17 +57,17 @@ const getText = () => {
   return ''
 }
 
-const startClipper = async () => {
+const startClipper = async (contentBase) => {
   if (clipper) {
     clipper.detach()
   }
-  const content = {
+  const content = Object.assign({
     title: getTitle(),
     url: getURL(),
     text: getText(),
     preview_plain: getText(),
     tags: []
-  }
+  }, contentBase)
   clipper = new Clipper(content)
   clipper.on('cancel', (content) => {
     removeClipper(true)
@@ -85,7 +82,7 @@ const startClipper = async () => {
 }
 
 const finishClipper = () => {
-  if (clipper) {
+  if (!clipper) {
     clipper.setStep(1)
     return new Promise((resolve, reject) => {
       clipper.on('finalized', (content) => {

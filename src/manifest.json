@@ -4,6 +4,7 @@
   "permissions": [
     "activeTab",
     "storage",
+    "contextMenus",
     "https://sync.standardnotes.org/*"
   ],
   "icons": {
