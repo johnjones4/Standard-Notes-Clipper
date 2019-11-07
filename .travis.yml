@@ -3,13 +3,10 @@ language: node_js
 node_js:
   - lts/*
 
-before_install:
-  - npm install --global web-ext eslint
-  - npm install standard eslint-config-standard eslint-plugin-standard eslint-plugin-promise eslint-plugin-import eslint-plugin-node
-
 script:
-  - make lint
-  - if [ "$TRAVIS_TAG" != '' ]; then make build; fi
+  - npm run lint
+  - npm run build
+  - if [ "$TRAVIS_TAG" != '' ]; then npm run package-firefox; fi
 
 deploy:
   provider: releases
