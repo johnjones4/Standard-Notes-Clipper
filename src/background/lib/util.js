@@ -1,5 +1,7 @@
-// eslint-disable-next-line no-unused-vars
-const sendMessagePromise = (tabid, type, payload) => {
+import SNError from './SNError'
+import _ from 'lodash'
+
+export const sendMessagePromise = (tabid, type, payload) => {
   return new Promise((resolve, reject) => {
     chrome.tabs.sendMessage(tabid, { type, payload }, (response) => {
       resolve(response)
@@ -7,8 +9,7 @@ const sendMessagePromise = (tabid, type, payload) => {
   })
 }
 
-// eslint-disable-next-line no-unused-vars
-const chromeSetPromise = (setParams) => {
+export const chromeSetPromise = (setParams) => {
   return new Promise((resolve, reject) => {
     chrome.storage.local.set(setParams, () => {
       resolve()
@@ -16,7 +17,7 @@ const chromeSetPromise = (setParams) => {
   })
 }
 
-const chromeGetPromise = (getParams) => {
+export const chromeGetPromise = (getParams) => {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get(getParams, items => {
       resolve(items)
@@ -24,24 +25,15 @@ const chromeGetPromise = (getParams) => {
   })
 }
 
-class SNError extends Error {
-  constructor (message, serverInfo) {
-    super(message, null, null)
-    this.serverInfo = serverInfo
-  }
-}
-
-// eslint-disable-next-line no-unused-vars
-const getParams = (params) => {
+export const getParams = (params) => {
   const paramArray = []
-  for (const param in params) {
+  _.keys(params).forEach(param => {
     paramArray.push(param + '=' + encodeURIComponent(params[param]))
-  }
+  })
   return paramArray.join('&')
 }
 
-// eslint-disable-next-line no-unused-vars
-const snRequest = async (auth, path, method, body) => {
+export const snRequest = async (auth, path, method, body) => {
   const token = auth ? (await chromeGetPromise(['token'])).token : null
   const params = {
     headers: {},
@@ -66,8 +58,7 @@ const snRequest = async (auth, path, method, body) => {
   return res
 }
 
-// eslint-disable-next-line no-unused-vars
-const checkForUser = async () => {
+export const checkForUser = async () => {
   const items = await chromeGetPromise({
     token: null,
     params: null,

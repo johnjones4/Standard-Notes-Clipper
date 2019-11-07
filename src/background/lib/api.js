@@ -1,7 +1,14 @@
-/* global StandardFile:readonly SFItem:readonly chromeGetPromise:readonly snRequest:readonly getPreferredEditor:readonly */
+import { StandardFile, SFItem } from 'standard-file-js'
+import {
+  chromeGetPromise,
+  snRequest
+} from './util'
+import {
+  getPreferredEditor
+} from './storage'
+import _ from 'lodash'
 
-// eslint-disable-next-line no-unused-vars
-const saveClipping = async (baseContent) => {
+export const saveClipping = async (baseContent) => {
   const item = new SFItem({
     content: Object.assign({}, baseContent, {
       appData: {}
@@ -56,8 +63,7 @@ const saveClipping = async (baseContent) => {
   return item
 }
 
-// eslint-disable-next-line no-unused-vars
-const updateItemTags = async (item, itemTags) => {
+export const updateItemTags = async (item, itemTags) => {
   const { params, keys, noteTags } = await chromeGetPromise({
     params: {},
     keys: {},
@@ -65,10 +71,10 @@ const updateItemTags = async (item, itemTags) => {
   })
 
   const constTagNameMap = {}
-  for (const uuid in noteTags) {
+  _.keys(noteTags).forEach(uuid => {
     const tag = noteTags[uuid]
     constTagNameMap[tag.content.title] = tag
-  }
+  })
   const saveItems = [item]
   itemTags.forEach(tagName => {
     let tagItem = null
@@ -106,8 +112,7 @@ const updateItemTags = async (item, itemTags) => {
   })
 }
 
-// eslint-disable-next-line no-unused-vars
-const fetchItems = async (keys, syncToken, cursorToken, tags, editors) => {
+export const fetchItems = async (keys, syncToken, cursorToken, tags, editors) => {
   const response = await snRequest(true, 'items/sync', 'POST', {
     items: [],
     sync_token: syncToken,

@@ -1,4 +1,29 @@
-/* global StandardFile:readonly checkForUser:readonly sendMessagePromise:readonly saveClipping:readonly chromeSetPromise:readonly getParams:readonly snRequest:readonly fetchItems:readonly chromeGetPromise:readonly updateItemTags:readonly */
+import regeneratorRuntime from 'regenerator-runtime'
+import { StandardFile } from 'standard-file-js'
+import {
+  getPreferredEditor,
+  getEditors,
+  setPreferredEditor
+} from './lib/storage'
+import {
+  checkForUser,
+  sendMessagePromise,
+  chromeGetPromise,
+  chromeSetPromise,
+  snRequest,
+  getParams
+} from './lib/util'
+import {
+  saveClipping,
+  fetchItems,
+  updateItemTags
+} from './lib/api'
+import 'lodash'
+
+window.regeneratorRuntime = regeneratorRuntime
+window.getPreferredEditor = getPreferredEditor
+window.getEditors = getEditors
+window.setPreferredEditor = setPreferredEditor
 
 chrome.browserAction.onClicked.addListener(async tab => {
   try {
@@ -18,37 +43,6 @@ chrome.browserAction.onClicked.addListener(async tab => {
     await sendMessagePromise(tab.id, 'error', { error: err.message })
   }
 })
-
-// eslint-disable-next-line no-unused-vars
-const getPreferredEditor = window.getPreferredEditor = async () => {
-  const { editors, preferredEditor } = await chromeGetPromise({
-    editors: {},
-    preferredEditor: null
-  })
-  if (preferredEditor && editors[preferredEditor]) {
-    return editors[preferredEditor]
-  }
-  return null
-}
-
-// eslint-disable-next-line no-unused-vars
-const getEditors = window.getEditors = async () => {
-  const { editors } = await chromeGetPromise({
-    editors: {}
-  })
-  const arr = []
-  for (const uuid in editors) {
-    arr.push(editors[uuid])
-  }
-  return arr
-}
-
-// eslint-disable-next-line no-unused-vars
-const setPreferredEditor = window.setPreferredEditor = (editorUUID) => {
-  return chromeSetPromise({
-    preferredEditor: editorUUID
-  })
-}
 
 window.logout = () => {
   return chromeSetPromise({

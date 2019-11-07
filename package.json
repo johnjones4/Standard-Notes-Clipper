@@ -1,0 +1,60 @@
+{
+  "name": "standard-notes-clipper",
+  "version": "1.0.9",
+  "description": "Clip content you find on the web and save it to your Standard Notes account",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "lint": "eslint src/background && eslint src/content && eslint src/settings",
+    "clean": "rm -rf build",
+    "package-firefox": "web-ext sign --source-dir build && mv web-ext-artifacts/standard_notes_clipper-*-an+fx.xpi web-ext-artifacts/firefox.xpi",
+    "package-chrome": "zip -r chrome.zip build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnjones4/Standard-Notes-Clipper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnjones4/Standard-Notes-Clipper/issues"
+  },
+  "homepage": "https://github.com/johnjones4/Standard-Notes-Clipper#readme",
+  "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-transform-react-jsx": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "autoprefixer": "^7.1.3",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^0.1.15",
+    "copy-webpack-plugin": "^4.6.0",
+    "css-loader": "^0.28.5",
+    "eslint": "^6.6.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-config-standard-preact": "^1.1.6",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^2.30.1",
+    "node-sass": "^4.5.0",
+    "postcss-loader": "^2.0.6",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^0.18.2",
+    "transform-json-webpack-plugin": "0.0.1",
+    "web-ext": "^3.2.1",
+    "webpack": "^3.7.0",
+    "webpack-dev-server": "^2.9.0"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "preact": "^10.0.1",
+    "preact-render-to-string": "^5.1.0",
+    "preact-router": "^3.0.0",
+    "regenerator-runtime": "^0.13.3",
+    "standard-file-js": "^0.3.71"
+  }
+}

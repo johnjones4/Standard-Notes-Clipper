@@ -1,8 +1,6 @@
 {
   "manifest_version": 2,
   "name": "Standard Notes Clipper",
-  "description": "Clip content you find on the web and save it to your Standard Notes account",
-  "version": "1.0.9",
   "permissions": [
     "activeTab",
     "storage",
@@ -15,11 +13,6 @@
   },
   "background": {
     "scripts": [
-      "background/vendor/lodash.min.js",
-      "background/vendor/regenerator.js",
-      "background/vendor/sfjs.js",
-      "background/util.js",
-      "background/api.js",
       "background/background.js"
     ],
     "persistent": true
