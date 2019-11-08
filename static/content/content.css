@@ -159,7 +159,7 @@
   color: #666;
 }
 
-.standard-notes-control-box button {
+.standard-notes-control-box button.button {
   border: none;
   outline: none;
   font-size: 16px;
@@ -170,18 +170,18 @@
   cursor: pointer;
 }
 
-.standard-notes-control-box button:hover,
-.standard-notes-control-box button:active {
+.standard-notes-control-box button.button:hover,
+.standard-notes-control-box button.button:active {
   border-color: rgb(70, 70, 70);
 }
 
-.standard-notes-control-box button.save {
+.standard-notes-control-box button.button.save {
   background: rgb(8, 109, 214);
   color: white;
   box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
 }
 
-.standard-notes-control-box button.skip {
+.standard-notes-control-box button.button.skip {
   box-shadow: rgb(214, 214, 214) 0px 0px 0px 1px inset;
   color: #666;
 }
@@ -216,7 +216,7 @@
   margin: 0;
 }
 
-.standard-notes-control-box .mode-selector .mode-button {
+.standard-notes-control-box .mode-selector button.button.mode-button {
   display: inline-block;
   width: 50%;
   box-sizing: border-box;
@@ -225,20 +225,38 @@
   color: #666;
 }
 
-.standard-notes-control-box .mode-selector .mode-button.selected {
+.standard-notes-control-box .mode-selector button.button.mode-button.selected {
   background: rgb(8, 109, 214);
   color: white;
   box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
 }
 
-.standard-notes-control-box .mode-selector .mode-button:first-child {
+.standard-notes-control-box .mode-selector button.button.mode-button:first-child {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   float: left;
 }
 
-.standard-notes-control-box .mode-selector .mode-button:last-child {
+.standard-notes-control-box .mode-selector button.button.mode-button:last-child {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   float: right;
+}
+
+.tags-suggestion-button {
+  display: block;
+  border: none;
+  outline: none;
+  border-radius: 0;
+  box-shadow: none;
+  width: 100%;
+  padding: 4px 6px;
+  font-size: 20px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tags-suggestion-button:hover {
+  background: rgb(8, 109, 214);
+  color: white;
 }

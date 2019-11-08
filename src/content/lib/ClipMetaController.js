@@ -1,9 +1,10 @@
 import ClipperControlBoxController from './ClipperControlBoxController'
 
 export default class ClipMetaController extends ClipperControlBoxController {
-  constructor (content) {
+  constructor (content, tags) {
     super()
     this.content = content
+    this.tags = tags
     this.initElement()
   }
 
@@ -32,21 +33,25 @@ export default class ClipMetaController extends ClipperControlBoxController {
     })
     formSection.appendChild(titleField)
 
-    const tagsField = document.createElement('input')
-    tagsField.type = 'text'
-    tagsField.className = 'tags'
-    tagsField.value = this.content.tags.length > 0 ? ('#' + this.content.tags.join(' #')) : ''
-    tagsField.placeholder = '#Tags'
-    tagsField.addEventListener('keyup', () => this.updateTags(tagsField.value))
-    tagsField.addEventListener('change', () => this.updateTags(tagsField.value))
-    formSection.appendChild(tagsField)
+    this.tagsField = document.createElement('input')
+    this.tagsField.type = 'text'
+    this.tagsField.className = 'tags'
+    this.tagsField.placeholder = '#Tags'
+    this.tagsField.addEventListener('keyup', () => this.updateTags())
+    this.tagsField.addEventListener('change', () => this.updateTags())
+    formSection.appendChild(this.tagsField)
+    this.setTagsField()
+
+    this.tagsSuggestionContainer = document.createElement('div')
+    this.tagsSuggestionContainer.className = 'tags-suggestions'
+    formSection.appendChild(this.tagsSuggestionContainer)
 
     const buttonSection = document.createElement('div')
     buttonSection.className = 'section buttons'
     this.controlBox.appendChild(buttonSection)
 
     const okButton = document.createElement('button')
-    okButton.className = 'save'
+    okButton.className = 'button save'
     okButton.textContent = 'Save'
     okButton.addEventListener('click', () => {
       okButton.disabled = true
@@ -56,7 +61,7 @@ export default class ClipMetaController extends ClipperControlBoxController {
     buttonSection.appendChild(okButton)
 
     const cancelButton = document.createElement('button')
-    cancelButton.className = 'skip'
+    cancelButton.className = 'button skip'
     cancelButton.textContent = 'Skip'
     cancelButton.addEventListener('click', () => {
       okButton.disabled = true
@@ -66,10 +71,36 @@ export default class ClipMetaController extends ClipperControlBoxController {
     buttonSection.appendChild(cancelButton)
   }
 
-  updateTags (tagsStr) {
-    this.content.tags = tagsStr
+  setTagsField (addSpace) {
+    this.tagsField.value = (this.content.tags.length > 0 ? ('#' + this.content.tags.join(' #')) : '') + (addSpace ? ' ' : '')
+  }
+
+  updateTags () {
+    let newTag = false
+    if (this.tagsField.value.length > 1 && this.tagsField.value[this.tagsField.value.length - 1] === ' ') {
+      newTag = true
+    }
+
+    this.content.tags = this.tagsField.value
       .split(' ')
       .map(tag => tag[0] === '#' ? tag.substring(1) : tag)
       .filter(tag => tag.trim() !== '')
+    this.setTagsField(newTag)
+
+    this.tagsSuggestionContainer.innerHTML = ''
+    if (!newTag && this.content.tags.length > 0 && this.content.tags[this.content.tags.length - 1].trim().length > 0) {
+      const lastTag = this.content.tags[this.content.tags.length - 1]
+      this.tags.filter(tag => tag.toLowerCase().indexOf(lastTag.toLowerCase()) === 0).forEach(tag => {
+        const tagButton = document.createElement('button')
+        tagButton.textContent = tag
+        tagButton.className = 'tags-suggestion-button'
+        tagButton.addEventListener('click', () => {
+          this.content.tags[this.content.tags.length - 1] = tag
+          this.setTagsField(true)
+          this.tagsSuggestionContainer.innerHTML = ''
+        }, true)
+        this.tagsSuggestionContainer.appendChild(tagButton)
+      })
+    }
   }
 }

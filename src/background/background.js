@@ -18,7 +18,6 @@ import {
   fetchItems,
   updateItemTags
 } from './lib/api'
-import 'lodash'
 import {
   contextMenuId,
   addContextMenu,
@@ -26,6 +25,7 @@ import {
   disableContextMenu,
   isContextMenuEnabled
 } from './lib/contextMenuManager'
+import _ from 'lodash'
 
 window.regeneratorRuntime = regeneratorRuntime
 window.getPreferredEditor = getPreferredEditor
@@ -92,7 +92,11 @@ const doClip = async (tab, _content) => {
   try {
     await checkForUser()
     await syncInfo()
-    const content = await sendMessagePromise(tab.id, 'clip', { content: _content })
+    const tags = await getTagStrings()
+    const content = await sendMessagePromise(tab.id, 'clip', {
+      content: _content,
+      tags
+    })
     const item = await saveClipping(content)
     const updatedContent = await sendMessagePromise(tab.id, 'saved', null)
     if (updatedContent) {
@@ -105,6 +109,13 @@ const doClip = async (tab, _content) => {
     console.error(err)
     await sendMessagePromise(tab.id, 'error', { error: err.message })
   }
+}
+
+const getTagStrings = async () => {
+  const { noteTags } = await chromeGetPromise({
+    noteTags: {}
+  })
+  return _.values(noteTags).map(tag => tag.content.title)
 }
 
 // eslint-disable-next-line no-unused-vars

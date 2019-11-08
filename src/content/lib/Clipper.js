@@ -5,9 +5,10 @@ import DomClipperSelector from './DomClipperSelector'
 import HighlightClipperSelector from './HighlightClipperSelector'
 
 export default class Clipper extends ClipperBase {
-  constructor (content) {
+  constructor (content, tags) {
     super()
     this.content = content
+    this.tags = tags
     this.step = 0
   }
 
@@ -66,7 +67,7 @@ export default class Clipper extends ClipperBase {
         if (this.selector) {
           this.selector.stop()
         }
-        this.metaController = new ClipMetaController(this.content)
+        this.metaController = new ClipMetaController(this.content, this.tags)
         this.metaController.on('done', content => {
           this.content = content
           this.fire('finalized', this.content)

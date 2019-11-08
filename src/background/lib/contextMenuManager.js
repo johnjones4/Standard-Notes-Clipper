@@ -30,7 +30,7 @@ export const addContextMenu = () => {
   }
   contextMenu = chrome.contextMenus.create({
     id: contextMenuId,
-    title: 'Clip Selection to Standard Notes',
+    title: 'Clip Selection',
     contexts: ['selection']
   })
 }
