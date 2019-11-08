@@ -23,13 +23,15 @@ import {
   contextMenuId,
   addContextMenu,
   enableContextMenu,
-  disableContextMenu
+  disableContextMenu,
+  isContextMenuEnabled
 } from './lib/contextMenuManager'
 
 window.regeneratorRuntime = regeneratorRuntime
 window.getPreferredEditor = getPreferredEditor
 window.getEditors = getEditors
 window.setPreferredEditor = setPreferredEditor
+window.isContextMenuEnabled = isContextMenuEnabled
 window.enableContextMenu = enableContextMenu
 window.disableContextMenu = disableContextMenu
 

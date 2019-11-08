@@ -18,7 +18,8 @@ export default class LoggedIn extends Component {
     const preferredEditor = await chrome.extension.getBackgroundPage().getPreferredEditor()
     this.setState({
       editors,
-      preferredEditor: preferredEditor ? preferredEditor.uuid : null
+      preferredEditor: preferredEditor ? preferredEditor.uuid : null,
+      isContextMenuEnabled: chrome.extension.getBackgroundPage().isContextMenuEnabled()
     })
   }
 
@@ -30,6 +31,17 @@ export default class LoggedIn extends Component {
   setPreferredEditor (uuid) {
     this.setState({ preferredEditor: uuid })
     chrome.extension.getBackgroundPage().setPreferredEditor(uuid)
+  }
+
+  async toggleContextMenuEnabled (newState) {
+    if (newState) {
+      await chrome.extension.getBackgroundPage().enableContextMenu()
+    } else {
+      await chrome.extension.getBackgroundPage().disableContextMenu()
+    }
+    this.setState({
+      isContextMenuEnabled: chrome.extension.getBackgroundPage().isContextMenuEnabled()
+    })
   }
 
   renderEditorSetting () {
@@ -49,6 +61,16 @@ export default class LoggedIn extends Component {
     )
   }
 
+  renderContextMenuSetting () {
+    return (
+      <div className='form-group'>
+        <label className='checkbox'>
+          <input type='checkbox' className='checkbox' name='contextMenu' checked={this.state.isContextMenuEnabled} onChange={(event) => this.toggleContextMenuEnabled(event.target.checked)} /> Enable Context (Right Click) Menu
+        </label>
+      </div>
+    )
+  }
+
   render () {
     return (
       <div className='col-lg-10'>
@@ -56,6 +78,7 @@ export default class LoggedIn extends Component {
         <fieldset>
           <legend>Settings</legend>
           { this.renderEditorSetting() }
+          { this.renderContextMenuSetting() }
         </fieldset>
         <hr />
         <button className='btn btn-danger' onClick={() => this.logout()}>Logout</button>
