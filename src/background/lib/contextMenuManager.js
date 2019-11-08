@@ -1,4 +1,3 @@
-
 import {
   chromeSetPromise
 } from './util'

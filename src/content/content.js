@@ -4,14 +4,16 @@ import Clipper from './lib/Clipper'
 window.regeneratorRuntime = regeneratorRuntime
 let clipper = null
 
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   try {
     switch (request.type) {
       case 'clip':
-        sendResponse(await startClipper(request.payload.content ? request.payload.content : null))
+        startClipper(request.payload.content ? request.payload.content : null)
+          .then(content => sendResponse(content))
         return true
       case 'saved':
-        sendResponse(await finishClipper())
+        finishClipper()
+          .then(content => sendResponse(content))
         return true
       case 'done':
         removeClipper()
@@ -61,7 +63,7 @@ const startClipper = async (contentBase) => {
   if (clipper) {
     clipper.detach()
   }
-  const content = Object.assign({
+  const content = Object.assign({}, {
     title: getTitle(),
     url: getURL(),
     text: getText(),
@@ -81,8 +83,8 @@ const startClipper = async (contentBase) => {
   return p
 }
 
-const finishClipper = () => {
-  if (!clipper) {
+const finishClipper = async () => {
+  if (clipper) {
     clipper.setStep(1)
     return new Promise((resolve, reject) => {
       clipper.on('finalized', (content) => {
