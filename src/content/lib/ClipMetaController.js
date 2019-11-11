@@ -94,7 +94,7 @@ export default class ClipMetaController extends ClipperControlBoxController {
         const tagButton = document.createElement('button')
         tagButton.textContent = tag
         tagButton.className = 'tags-suggestion-button'
-        tagButton.addEventListener('click', () => {
+        tagButton.addEventListener('mousedown', () => {
           this.content.tags[this.content.tags.length - 1] = tag
           this.setTagsField(true)
           this.tagsSuggestionContainer.innerHTML = ''
