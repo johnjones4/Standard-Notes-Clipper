@@ -8,6 +8,7 @@
     "watch": "webpack --watch --progress --config webpack.config.js",
     "lint": "eslint src/background && eslint src/content && eslint src/settings",
     "clean": "rm -rf build",
+    "icons": "rsvg-convert -w 16 -h 16 icon.svg  > static/icon16.png && rsvg-convert -w 48 -h 48 icon.svg  > static/icon48.png && rsvg-convert -w 128 -h 128 icon.svg  > static/icon128.png",
     "package-firefox": "web-ext sign --source-dir build && mv web-ext-artifacts/standard_notes_clipper-*-an+fx.xpi web-ext-artifacts/firefox.xpi",
     "package-chrome": "cp -R build chrome && zip -r chrome.zip chrome"
   },

@@ -37,3 +37,7 @@ Go to _Tools_ > _Add-ons_, then click the gear icon and select _Debug Addons_ fr
 ### Chrome
 
 Go to _Window_ > _Extensions_, then click _Load unpacked_ and drive to folder containing this project's `build` folder and click _Select_. 
+
+## Acknowledgements and Contributions
+
+* Cut by Gregor Cresnar from the Noun Project
