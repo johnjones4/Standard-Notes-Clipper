@@ -56,12 +56,14 @@ window.logout = () => {
     tagSyncToken: null,
     tags: {},
     editors: {},
-    preferredEditor: null
+    preferredEditor: null,
+    serverURL: null
   })
 }
 
-window.login = async (email, password, extraParams) => {
+window.login = async (serverURL, email, password, extraParams) => {
   try {
+    await chromeSetPromise({ serverURL })
     const authParams = getParams(Object.assign({}, { email }, extraParams))
     const params = await snRequest(false, 'auth/params?' + authParams, 'GET', null)
     const SFJS = new StandardFile()

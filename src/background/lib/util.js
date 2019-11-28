@@ -34,19 +34,19 @@ export const getParams = (params) => {
 }
 
 export const snRequest = async (auth, path, method, body) => {
-  const token = auth ? (await chromeGetPromise(['token'])).token : null
+  const { token, serverURL } = await chromeGetPromise(['token', 'serverURL'])
   const params = {
     headers: {},
     method
   }
-  if (token) {
+  if (auth && token) {
     params.headers.Authorization = 'Bearer ' + token
   }
   if (body) {
     params.headers['Content-type'] = 'application/json'
     params.body = JSON.stringify(body)
   }
-  const response = await fetch('https://sync.standardnotes.org/' + path, params)
+  const response = await fetch(serverURL + path, params)
   const res = await response.json()
   if (res && res.errors) {
     throw new SNError(res.errors.map(e => e.message).join(', '), res.errors)

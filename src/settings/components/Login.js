@@ -10,21 +10,27 @@ export default class Login extends Component {
       error: null,
       loggingIn: false,
       twofaKey: null,
-      twofaCode: ''
+      twofaCode: '',
+      serverURL: 'https://sync.standardnotes.org/'
     }
   }
 
   async doLogin () {
+    let serverURL = this.state.serverURL
+    if (serverURL[serverURL.length - 1] !== '/') {
+      serverURL = serverURL + '/'
+    }
     this.setState({
       loggingIn: true,
-      error: null
+      error: null,
+      serverURL
     })
     const extraParams = {}
     if (this.state.twofaKey) {
       extraParams[this.state.twofaKey] = this.state.twofaCode
     }
     try {
-      const response = await chrome.extension.getBackgroundPage().login(this.state.email, this.state.password, extraParams)
+      const response = await chrome.extension.getBackgroundPage().login(serverURL, this.state.email, this.state.password, extraParams)
       if (response && (response.tag === 'mfa-required' || response.tag === 'mfa-invalid')) {
         this.setState({
           twofaKey: response.payload.mfa_key,
@@ -75,6 +81,7 @@ export default class Login extends Component {
     const fields = this.state.twofaKey ? [
       (<FormField required name='code' label='Code' type='text' value={this.state.twofaCode} onChange={event => this.setState({ twofaCode: event.target.value })} />)
     ] : [
+      (<FormField required name='serverURL' label='Server URL' type='text' value={this.state.serverURL} onChange={event => this.setState({ serverURL: event.target.value })} />),
       (<FormField required name='email' label='E-mail' type='email' value={this.state.email} onChange={event => this.setState({ email: event.target.value })} />),
       (<FormField required name='password' label='Password' type='password' value={this.state.password} onChange={event => this.setState({ password: event.target.value })} />)
     ]
