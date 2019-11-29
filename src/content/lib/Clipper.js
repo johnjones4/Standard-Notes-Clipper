@@ -3,6 +3,8 @@ import ClipModeController from './ClipModeController'
 import ClipMetaController from './ClipMetaController'
 import DomClipperSelector from './DomClipperSelector'
 import HighlightClipperSelector from './HighlightClipperSelector'
+import ArticleClipper from './ArticleClipper'
+import BookmarkClipper from './BookmarkClipper'
 
 export default class Clipper extends ClipperBase {
   constructor (content, tags) {
@@ -52,6 +54,27 @@ export default class Clipper extends ClipperBase {
           this.mode = mode
           this.updateMode()
         })
+        this.modeController.on('clip', async () => {
+          try {
+            let clipper = null
+            switch (this.mode) {
+              case 'article':
+                clipper = new ArticleClipper()
+                break
+              case 'bookmark':
+                clipper = new BookmarkClipper()
+                break
+            }
+            if (clipper) {
+              const { text, previewPlain } = await clipper.clip()
+              this.content.text = text
+              this.content.preview_plain = previewPlain
+              this.fire('clipped', this.content)
+            }
+          } catch (e) {
+            this.fire('error', e)
+          }
+        })
         this.modeController.on('cancel', () => {
           this.fire('cancel')
         })
@@ -95,12 +118,16 @@ export default class Clipper extends ClipperBase {
       case 'highlight':
         this.selector = new HighlightClipperSelector(this.shadowDomRoot)
         break
+      default:
+        this.selector = null
     }
-    this.selector.on('clipped', ({ text, previewPlain }) => {
-      this.content.text = text
-      this.content.preview_plain = previewPlain
-      this.fire('clipped', this.content)
-    })
-    this.selector.start()
+    if (this.selector) {
+      this.selector.on('clipped', ({ text, previewPlain }) => {
+        this.content.text = text
+        this.content.preview_plain = previewPlain
+        this.fire('clipped', this.content)
+      })
+      this.selector.start()
+    }
   }
 }

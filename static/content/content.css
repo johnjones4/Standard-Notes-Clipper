@@ -69,6 +69,7 @@
     box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
   }
 }
+
 @keyframes load4 {
   0%,
   100% {
@@ -96,7 +97,6 @@
     box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
   }
 }
-
 
 .standard-notes-control-box {
   z-index: 10000001;
@@ -217,12 +217,13 @@
 }
 
 .standard-notes-control-box .mode-selector button.button.mode-button {
-  display: inline-block;
-  width: 50%;
+  display: block;
+  width: 100%;
   box-sizing: border-box;
   margin: 0;
   box-shadow: rgb(214, 214, 214) 0px 0px 0px 1px inset;
   color: #666;
+  border-radius: 0;
 }
 
 .standard-notes-control-box .mode-selector button.button.mode-button.selected {
@@ -232,14 +233,14 @@
 }
 
 .standard-notes-control-box .mode-selector button.button.mode-button:first-child {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
   float: left;
 }
 
 .standard-notes-control-box .mode-selector button.button.mode-button:last-child {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
   float: right;
 }
 
@@ -259,4 +260,18 @@
 .tags-suggestion-button:hover {
   background: rgb(8, 109, 214);
   color: white;
+}
+
+.hide {
+  display: none;
+}
+
+.section.ok {
+  text-align: right;
+}
+
+.section.ok button {
+  background: rgb(8, 109, 214);
+  color: white;
+  box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
 }

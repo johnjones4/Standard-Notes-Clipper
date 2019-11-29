@@ -25,42 +25,76 @@ export default class ClipModeController extends ClipperControlBoxController {
     modeSelector.className = 'section mode-selector'
     this.controlBox.appendChild(modeSelector)
 
-    this.clipModeButton = document.createElement('button')
-    this.clipModeButton.className = 'button mode-button'
-    this.clipModeButton.textContent = 'Clip Area'
-    this.clipModeButton.addEventListener('click', () => {
-      this.mode = 'clip'
-      this.updateForMode()
-    }, false)
-    modeSelector.appendChild(this.clipModeButton)
-
-    this.highlightModeButton = document.createElement('button')
-    this.highlightModeButton.className = 'button mode-button'
-    this.highlightModeButton.textContent = 'Highlight Text'
-    this.highlightModeButton.addEventListener('click', () => {
-      this.mode = 'highlight'
-      this.updateForMode()
-    }, false)
-    modeSelector.appendChild(this.highlightModeButton)
+    this.modeButtons = [
+      this.makeModeButton('Select Area', 'clip'),
+      this.makeModeButton('Highlight Text', 'highlight'),
+      this.makeModeButton('Article', 'article'),
+      this.makeModeButton('Bookmark', 'bookmark')
+    ]
+    this.modeButtons.forEach(({ button }) => modeSelector.appendChild(button))
 
     this.help = document.createElement('p')
     this.help.className = 'section direction'
     this.controlBox.appendChild(this.help)
+
+    const okSection = document.createElement('p')
+    okSection.className = 'section ok'
+    this.controlBox.appendChild(okSection)
+
+    this.okButton = document.createElement('button')
+    this.okButton.className = 'button hide'
+    this.okButton.textContent = 'Clip'
+    this.okButton.addEventListener('click', () => {
+      this.fire('clip')
+    }, false)
+    okSection.appendChild(this.okButton)
+  }
+
+  makeModeButton (label, name) {
+    const button = document.createElement('button')
+    button.className = 'button mode-button'
+    button.textContent = label
+    button.addEventListener('click', () => {
+      this.mode = name
+      this.updateForMode()
+    }, false)
+    return { name, button }
+  }
+
+  hideOK () {
+    this.okButton.classList.add('hide')
+  }
+
+  showOK () {
+    this.okButton.classList.remove('hide')
   }
 
   updateForMode () {
     switch (this.mode) {
       case 'clip':
         this.help.textContent = 'Hover over the segment of the page you wish to clip and click.'
-        this.clipModeButton.classList.add('selected')
-        this.highlightModeButton.classList.remove('selected')
+        this.hideOK()
         break
       case 'highlight':
         this.help.textContent = 'Highlight the text you would like to clip and click the "Clip Text" button.'
-        this.clipModeButton.classList.remove('selected')
-        this.highlightModeButton.classList.add('selected')
+        this.hideOK()
+        break
+      case 'article':
+        this.help.textContent = 'Clip the contents of this page\'s main content.'
+        this.showOK()
+        break
+      case 'bookmark':
+        this.help.textContent = 'Save just the URL for this page to a note.'
+        this.showOK()
         break
     }
+    this.modeButtons.forEach(({ name, button }) => {
+      if (this.mode === name) {
+        button.classList.add('selected')
+      } else {
+        button.classList.remove('selected')
+      }
+    })
     this.fire('modechange', this.mode)
   }
 }

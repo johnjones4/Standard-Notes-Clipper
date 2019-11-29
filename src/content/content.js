@@ -71,8 +71,11 @@ const startClipper = async (contentBase, tags) => {
     tags: []
   }, contentBase)
   clipper = new Clipper(content, tags)
-  clipper.on('cancel', (content) => {
+  clipper.on('cancel', () => {
     removeClipper(true)
+  })
+  clipper.on('error', err => {
+    alert(err.message)
   })
   const p = new Promise((resolve, reject) => {
     clipper.on('clipped', content => {
