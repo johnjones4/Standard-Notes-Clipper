@@ -26,6 +26,7 @@ import {
   isContextMenuEnabled
 } from './lib/contextMenuManager'
 import _ from 'lodash'
+import sanitizeHtml from 'sanitize-html'
 
 window.regeneratorRuntime = regeneratorRuntime
 window.getPreferredEditor = getPreferredEditor
@@ -99,11 +100,11 @@ const doClip = async (tab, _content) => {
       content: _content,
       tags
     })
+    content.text = sanitizeHtml(content.text)
     const item = await saveClipping(content)
     const updatedContent = await sendMessagePromise(tab.id, 'saved', null)
     if (updatedContent) {
       item.content.title = updatedContent.title
-      item.content.text = updatedContent.text
       await updateItemTags(item, updatedContent.tags)
     }
     await sendMessagePromise(tab.id, 'done')
