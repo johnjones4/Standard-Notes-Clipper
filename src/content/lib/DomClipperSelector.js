@@ -37,7 +37,7 @@ export default class DomClipperSelector extends ClipperSelector {
       this.finish()
       this.hoverElement.classList.add('selected')
       this.fire('clipped', {
-        text: element.innerHTML,
+        text: `${element.innerHTML}<p>Source: <a href="${window.location.href}">${window.location.href}</a></p>`,
         previewPlain: element.textContent
       })
     }

@@ -15,7 +15,7 @@ export default class HighlightClipperSelector extends ClipperSelector {
     this.grabButton.addEventListener('click', () => {
       this.finish()
       this.fire('clipped', {
-        text: window.getSelection().toString(),
+        text: window.getSelection().toString() + '\n\n' + window.location.href,
         previewPlain: window.getSelection().toString()
       })
     }, false)

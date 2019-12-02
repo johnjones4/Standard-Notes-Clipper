@@ -18,7 +18,7 @@ export default class ArticleClipper extends SimpleClipper {
       article = document.body
     }
     return {
-      text: article.innerHTML,
+      text: `${article.innerHTML}<p>Source: <a href="${window.location.href}">${window.location.href}</a></p>`,
       previewPlain: article.textContent
     }
   }

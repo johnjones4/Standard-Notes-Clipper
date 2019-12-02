@@ -39,7 +39,7 @@ window.disableContextMenu = disableContextMenu
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === contextMenuId) {
     await doClip(tab, {
-      text: info.selectionText,
+      text: info.selectionText + '\n\n' + info.pageUrl,
       preview_plain: info.selectionText
     })
   }
