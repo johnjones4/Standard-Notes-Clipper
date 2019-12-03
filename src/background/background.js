@@ -100,7 +100,9 @@ const doClip = async (tab, _content) => {
       content: _content,
       tags
     })
-    content.text = sanitizeHtml(content.text)
+    content.text = sanitizeHtml(content.text, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img'])
+    })
     const item = await saveClipping(content)
     const updatedContent = await sendMessagePromise(tab.id, 'saved', null)
     if (updatedContent) {
