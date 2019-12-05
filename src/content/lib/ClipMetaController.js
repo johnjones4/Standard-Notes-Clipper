@@ -33,14 +33,18 @@ export default class ClipMetaController extends ClipperControlBoxController {
     })
     formSection.appendChild(titleField)
 
+    this.tagsContainer = document.createElement('div')
+    this.tagsContainer.className = 'tags-container'
+    formSection.appendChild(this.tagsContainer)
+    this.updateCurrentTags()
+
     this.tagsField = document.createElement('input')
     this.tagsField.type = 'text'
     this.tagsField.className = 'tags'
-    this.tagsField.placeholder = '#Tags'
-    this.tagsField.addEventListener('keyup', () => this.updateTags())
-    this.tagsField.addEventListener('change', () => this.updateTags())
+    this.tagsField.placeholder = 'Add tags...'
+    this.tagsField.addEventListener('keyup', () => this.updateTagSuggestions())
+    this.tagsField.addEventListener('change', () => this.updateTagSuggestions())
     formSection.appendChild(this.tagsField)
-    this.setTagsField()
 
     this.tagsSuggestionContainer = document.createElement('div')
     this.tagsSuggestionContainer.className = 'tags-suggestions'
@@ -71,36 +75,44 @@ export default class ClipMetaController extends ClipperControlBoxController {
     buttonSection.appendChild(cancelButton)
   }
 
-  setTagsField (addSpace) {
-    this.tagsField.value = (this.content.tags.length > 0 ? ('#' + this.content.tags.join(' #')) : '') + (addSpace ? ' ' : '')
+  updateCurrentTags () {
+    this.tagsContainer.innerHTML = ''
+    this.content.tags.forEach((tag, i) => {
+      const button = document.createElement('button')
+      button.className = 'remove-tag-button'
+      button.textContent = tag
+      button.addEventListener('click', () => {
+        this.content.tags.splice(i, 1)
+        this.updateCurrentTags()
+      })
+      this.tagsContainer.appendChild(button)
+    })
   }
 
-  updateTags () {
-    let newTag = false
-    if (this.tagsField.value.length > 1 && this.tagsField.value[this.tagsField.value.length - 1] === ' ') {
-      newTag = true
-    }
-
-    this.content.tags = this.tagsField.value
-      .split(' ')
-      .map(tag => tag[0] === '#' ? tag.substring(1) : tag)
-      .filter(tag => tag.trim() !== '')
-    this.setTagsField(newTag)
-
+  updateTagSuggestions () {
+    const tagText = (this.tagsField.value[0] === '#' ? this.tagsField.value.substring(1) : this.tagsField.value).trim()
     this.tagsSuggestionContainer.innerHTML = ''
-    if (!newTag && this.content.tags.length > 0 && this.content.tags[this.content.tags.length - 1].trim().length > 0) {
-      const lastTag = this.content.tags[this.content.tags.length - 1]
-      this.tags.filter(tag => tag.toLowerCase().indexOf(lastTag.toLowerCase()) === 0).forEach(tag => {
+    if (tagText.length > 0) {
+      const addTagOption = (text, tag) => {
         const tagButton = document.createElement('button')
-        tagButton.textContent = tag
+        tagButton.textContent = text
         tagButton.className = 'tags-suggestion-button'
         tagButton.addEventListener('mousedown', () => {
-          this.content.tags[this.content.tags.length - 1] = tag
-          this.setTagsField(true)
           this.tagsSuggestionContainer.innerHTML = ''
+          this.tagsField.value = ''
+          this.content.tags.push(tag)
+          this.updateCurrentTags()
         }, true)
         this.tagsSuggestionContainer.appendChild(tagButton)
-      })
+      }
+
+      const suggestions = this.tags.filter(tag => tag.toLowerCase().indexOf(tagText.toLowerCase()) === 0)
+      suggestions.forEach(tag => addTagOption(tag, tag))
+
+      const noPerfectMatches = this.tags.findIndex(tag => tag.toLowerCase() === tagText.toLowerCase()) < 0
+      if (noPerfectMatches) {
+        addTagOption(`Create new tag "${tagText}"`, tagText)
+      }
     }
   }
 }
