@@ -7,10 +7,11 @@ import ArticleClipper from './ArticleClipper'
 import BookmarkClipper from './BookmarkClipper'
 
 export default class Clipper extends ClipperBase {
-  constructor (content, tags) {
+  constructor (content, tags, editors) {
     super()
     this.content = content
     this.tags = tags
+    this.editors = editors
     this.step = 0
   }
 
@@ -90,7 +91,7 @@ export default class Clipper extends ClipperBase {
         if (this.selector) {
           this.selector.stop()
         }
-        this.metaController = new ClipMetaController(this.content, this.tags)
+        this.metaController = new ClipMetaController(this.content, this.tags, this.editors)
         this.metaController.on('done', content => {
           this.content = content
           this.fire('finalized', this.content)

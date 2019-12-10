@@ -1,10 +1,11 @@
 import ClipperControlBoxController from './ClipperControlBoxController'
 
 export default class ClipMetaController extends ClipperControlBoxController {
-  constructor (content, tags) {
+  constructor (content, tags, editors, editor) {
     super()
     this.content = content
     this.tags = tags
+    this.editors = editors
     this.initElement()
   }
 
@@ -49,6 +50,24 @@ export default class ClipMetaController extends ClipperControlBoxController {
     this.tagsSuggestionContainer = document.createElement('div')
     this.tagsSuggestionContainer.className = 'tags-suggestions'
     formSection.appendChild(this.tagsSuggestionContainer)
+
+    const editorChooser = document.createElement('select')
+    editorChooser.className = 'editor-chooser'
+    const option = document.createElement('option')
+    option.value = null
+    option.textContent = 'Plain Editor'
+    editorChooser.appendChild(option)
+    this.editors.forEach(editor => {
+      const option = document.createElement('option')
+      option.value = editor.uuid
+      option.textContent = editor.content.name
+      option.selected = editor.uuid === this.content.editor
+      editorChooser.appendChild(option)
+    })
+    editorChooser.addEventListener('change', () => {
+      this.content.editor = editorChooser.selectedIndex > 0 ? this.editors[editorChooser.selectedIndex - 1].uuid : null
+    })
+    formSection.appendChild(editorChooser)
 
     const buttonSection = document.createElement('div')
     buttonSection.className = 'section buttons'

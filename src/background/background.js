@@ -16,7 +16,7 @@ import {
 import {
   saveClipping,
   fetchItems,
-  updateItemTags
+  updateClipping
 } from './lib/api'
 import {
   contextMenuId,
@@ -96,9 +96,13 @@ const doClip = async (tab, _content) => {
     await checkForUser()
     await syncInfo()
     const tags = await getTagStrings()
+    const editors = await getEditors()
+    const editor = await getPreferredEditor()
     const content = await sendMessagePromise(tab.id, 'clip', {
       content: _content,
-      tags
+      tags,
+      editors,
+      editor: editor ? editor.uuid : null
     })
     content.text = sanitizeHtml(content.text, {
       allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img'])
@@ -107,7 +111,7 @@ const doClip = async (tab, _content) => {
     const updatedContent = await sendMessagePromise(tab.id, 'saved', null)
     if (updatedContent) {
       item.content.title = updatedContent.title
-      await updateItemTags(item, updatedContent.tags)
+      await updateClipping(item, updatedContent.tags, updatedContent.editor)
     }
     await sendMessagePromise(tab.id, 'done')
   } catch (err) {

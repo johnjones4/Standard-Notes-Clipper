@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 #standard-notes-clipper-hover {
   background: rgba(50,50,50,0.05);
   z-index: 10000000;
@@ -148,6 +152,7 @@
   padding: 5px;
   font-size: 18px;
   background-color: #F8F8F8;
+  box-shadow: rgb(214, 214, 214) 0px 0px 0px 1px inset;
 }
 
 .standard-notes-control-box input.title {
@@ -315,4 +320,15 @@
   background: rgb(8, 109, 214);
   color: white;
   box-shadow: rgb(8, 109, 214) 0px 0px 0px 1px inset;
+}
+
+select.editor-chooser {
+  display: block;
+  width: 100%;
+  font-size: 1.25em;
+  margin: 12px 0 0 0;
+}
+
+.buttons {
+  text-align: right;
 }

@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   try {
     switch (request.type) {
       case 'clip':
-        startClipper(request.payload.content ? request.payload.content : null, request.payload.tags)
+        startClipper(request.payload.content ? request.payload.content : null, request.payload.tags, request.payload.editors, request.payload.editor)
           .then(content => sendResponse(content))
         return true
       case 'saved':
@@ -59,7 +59,7 @@ const getText = () => {
   return ''
 }
 
-const startClipper = async (contentBase, tags) => {
+const startClipper = async (contentBase, tags, editors, editor) => {
   if (clipper) {
     clipper.detach()
   }
@@ -68,9 +68,10 @@ const startClipper = async (contentBase, tags) => {
     url: getURL(),
     text: getText(),
     preview_plain: getText(),
-    tags: []
+    tags: [],
+    editor: editor
   }, contentBase)
-  clipper = new Clipper(content, tags)
+  clipper = new Clipper(content, tags, editors)
   clipper.on('cancel', () => {
     removeClipper(true)
   })

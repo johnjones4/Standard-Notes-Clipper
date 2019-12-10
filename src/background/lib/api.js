@@ -63,19 +63,21 @@ export const saveClipping = async (baseContent) => {
   return item
 }
 
-export const updateItemTags = async (item, itemTags) => {
-  const { params, keys, noteTags } = await chromeGetPromise({
+export const updateClipping = async (item, itemTags, editorUUID) => {
+  const { params, keys, noteTags, editors } = await chromeGetPromise({
     params: {},
     keys: {},
-    noteTags: {}
+    noteTags: {},
+    editors: {}
   })
+
+  const saveItems = [item]
 
   const constTagNameMap = {}
   _.keys(noteTags).forEach(uuid => {
     const tag = noteTags[uuid]
     constTagNameMap[tag.content.title] = tag
   })
-  const saveItems = [item]
   itemTags.forEach(tagName => {
     let tagItem = null
     if (constTagNameMap[tagName]) {
@@ -92,6 +94,33 @@ export const updateItemTags = async (item, itemTags) => {
     item.addItemAsRelationship(tagItem)
     saveItems.push(tagItem)
   })
+
+  const comps = _.keys(item.content.appData['org.standardnotes.sn.components'])
+  const oldEditorUUID = comps.length > 0 ? comps[0] : null
+  if (editorUUID !== oldEditorUUID) {
+    item.content.appData['org.standardnotes.sn.components'] = {}
+    if (editorUUID) {
+      const editor = new SFItem(editors[editorUUID])
+      editor.content.associatedItemIds.push(item.uuid)
+      item.content.appData['org.standardnotes.sn.components'][editor.uuid] = {}
+      item.content.appData['org.standardnotes.sn'] = {
+        prefersPlainEditor: false
+      }
+      saveItems.push(editor)
+    } else {
+      item.content.appData['org.standardnotes.sn'] = {
+        prefersPlainEditor: true
+      }
+    }
+    if (oldEditorUUID) {
+      const oldEditor = new SFItem(editors[oldEditorUUID])
+      const oldIndex = oldEditor.content.associatedItemIds.indexOf(item.uuid)
+      if (oldIndex >= 0) {
+        oldEditor.content.associatedItemIds.splice(oldIndex, 1)
+      }
+      saveItems.push(oldEditor)
+    }
+  }
 
   const SFJS = new StandardFile()
   const items = await Promise.all(
