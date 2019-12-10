@@ -1,6 +1,6 @@
 {
   "name": "standard-notes-clipper",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Clip content you find on the web and save it to your Standard Notes account",
   "main": "index.js",
   "scripts": {
