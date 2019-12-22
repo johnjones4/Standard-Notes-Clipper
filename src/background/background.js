@@ -166,6 +166,9 @@ const setupInlineImages = async () => {
   const { inlineImages } = await chromeGetPromise({
     inlineImages: true
   })
+  if(inlineImages) {
+    enableInlineImages()
+  }
 }
 
 const initializeAddon = async () => {
