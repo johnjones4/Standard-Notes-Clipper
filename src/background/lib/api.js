@@ -52,12 +52,14 @@ export const saveClipping = async (baseContent) => {
   if(_inlineImage) {
     const matchImages = /img.*?((http|\/\/).*?(png|jpg|jpeg|gif))["|']/gim
     let imageReferences = item.content.text.match(matchImages)
-    imageReferences.forEach((i)=>{
-      let url = i.match(/((http|\/\/).*?(png|jpg|jpeg|gif))["|']/gim)
-      generateDataUri(url[0].substring(0, url[0].length-1), (u, data)=>{
-        item.content.text = item.content.text.replace(u, data)
+    if(imageReferences != null) {
+      imageReferences.forEach((i)=>{
+        let url = i.match(/((http|\/\/).*?(png|jpg|jpeg|gif))["|']/gim)
+        generateDataUri(url[0].substring(0, url[0].length-1), (u, data)=>{
+          item.content.text = item.content.text.replace(u, data)
+        })
       })
-    })
+    }
   }
 
   const items = await Promise.all([
