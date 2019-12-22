@@ -8,7 +8,38 @@ import {
 } from './editorManager'
 import _ from 'lodash'
 
+export const generateDataUri = async (url, callback) => {
+  var image = new Image()
+  image.onload = function () {
+    var canvas = document.createElement('canvas')
+    canvas.width = this.naturalWidth
+    canvas.height = this.naturalHeight
+    canvas.getContext('2d').drawImage(this, 0, 0)
+    callback(url, canvas.toDataURL('image/png'))
+  }
+  image.src = url
+}
+
 export const saveClipping = async (baseContent) => {
+  // adding inline image saving option
+  // const _inlineImage = await getInlineImageOption() // need to add actual option
+  const _inlineImage = true
+  if(_inlineImage) {
+    // get all image references in baseContent
+    const matchImages = /img.*?(http.*?(png|jpg|jpeg|gif))["|']/gim
+    let imageReferences = baseContent.text.match(matchImages)
+    // loop through them and convert them to dataUri
+    imageReferences.forEach((i)=>{
+      let url = i.match(/(http.*?(png|jpg|jpeg|gif))/gim)
+      generateDataUri(url[0], (u, data)=>{
+console.log(u, data)
+        // loop through and replace references with dataUri
+        baseContent.text = baseContent.text.replace(u, data)
+      })
+    })
+  }
+console.log(baseContent.text)
+  // -- end of inline image
   const item = new SFItem({
     content: Object.assign({}, baseContent, {
       appData: {}

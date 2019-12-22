@@ -30,8 +30,8 @@
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^0.1.15",
-    "copy-webpack-plugin": "^4.6.0",
-    "css-loader": "^0.28.5",
+    "copy-webpack-plugin": "^5.1.1",
+    "css-loader": "^3.4.0",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-config-standard-preact": "^1.1.6",
@@ -48,15 +48,19 @@
     "style-loader": "^0.18.2",
     "transform-json-webpack-plugin": "0.0.1",
     "web-ext": "^3.2.1",
-    "webpack": "^3.7.0"
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
+    "ajv": "^6.10.2",
     "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.16.0",
     "preact": "^10.0.1",
     "preact-render-to-string": "^5.1.0",
     "preact-router": "^3.0.0",
     "regenerator-runtime": "^0.13.3",
     "sanitize-html": "^1.20.1",
-    "standard-file-js": "^0.3.71"
+    "standard-file-js": "^0.3.71",
+    "webpack": "^4.41.4"
   }
 }
