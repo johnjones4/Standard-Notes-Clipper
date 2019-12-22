@@ -17,29 +17,10 @@ export const generateDataUri = async (url, callback) => {
     canvas.getContext('2d').drawImage(this, 0, 0)
     callback(url, canvas.toDataURL('image/png'))
   }
-  image.src = url
+  image.src = (url.substring(0,2) == '//' ? "https:":'' ) + url
 }
 
 export const saveClipping = async (baseContent) => {
-  // adding inline image saving option
-  // const _inlineImage = await getInlineImageOption() // need to add actual option
-  const _inlineImage = true
-  if(_inlineImage) {
-    // get all image references in baseContent
-    const matchImages = /img.*?(http.*?(png|jpg|jpeg|gif))["|']/gim
-    let imageReferences = baseContent.text.match(matchImages)
-    // loop through them and convert them to dataUri
-    imageReferences.forEach((i)=>{
-      let url = i.match(/(http.*?(png|jpg|jpeg|gif))/gim)
-      generateDataUri(url[0], (u, data)=>{
-console.log(u, data)
-        // loop through and replace references with dataUri
-        baseContent.text = baseContent.text.replace(u, data)
-      })
-    })
-  }
-console.log(baseContent.text)
-  // -- end of inline image
   const item = new SFItem({
     content: Object.assign({}, baseContent, {
       appData: {}
@@ -65,6 +46,19 @@ console.log(baseContent.text)
   })
 
   const SFJS = new StandardFile()
+
+  // const _inlineImage = await getInlineImageOption() // need to add actual option
+  const _inlineImage = true
+  if(_inlineImage) {
+    const matchImages = /img.*?((http|\/\/).*?(png|jpg|jpeg|gif))["|']/gim
+    let imageReferences = item.content.text.match(matchImages)
+    imageReferences.forEach((i)=>{
+      let url = i.match(/((http|\/\/).*?(png|jpg|jpeg|gif))["|']/gim)
+      generateDataUri(url[0].substring(0, url[0].length-1), (u, data)=>{
+        item.content.text = item.content.text.replace(u, data)
+      })
+    })
+  }
 
   const items = await Promise.all([
     // eslint-disable-next-line camelcase
