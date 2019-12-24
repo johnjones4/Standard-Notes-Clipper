@@ -17,11 +17,11 @@ export const generateDataUri = async (url, callback) => {
     canvas.getContext('2d').drawImage(this, 0, 0)
     callback(url, canvas.toDataURL('image/png'))
   }
-  let formattedUrl = (url.substring(0,2) == '//' ? "https:":'' ) + url
-  if(formattedUrl.substring(0,1) == '/') {
+  let formattedUrl = (url.substring(0, 2) === '//' ? 'https:' : '') + url
+  if (formattedUrl.substring(0, 1) === '/') {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      let tab = tabs[0]
-      let urlInfo = new URL(tab.url)
+      const tab = tabs[0]
+      const urlInfo = new URL(tab.url)
       formattedUrl = urlInfo.origin + formattedUrl
       image.src = formattedUrl
     })
@@ -58,13 +58,13 @@ export const saveClipping = async (baseContent) => {
 
   const SFJS = new StandardFile()
 
-  if(_inlineImages) {
+  if (_inlineImages) {
     const matchImages = /img.*?((http|\/).*?(png|jpg|jpeg|gif))["|']/gim
-    let imageReferences = item.content.text.match(matchImages)
-    if(imageReferences != null) {
-      imageReferences.forEach((i)=>{
-        let url = i.match(/((http|\/).*?(png|jpg|jpeg|gif))["|']/gim)
-        generateDataUri(url[0].substring(0, url[0].length-1), (u, data)=>{
+    const imageReferences = item.content.text.match(matchImages)
+    if (imageReferences != null) {
+      imageReferences.forEach((i) => {
+        const url = i.match(/((http|\/).*?(png|jpg|jpeg|gif))["|']/gim)
+        generateDataUri(url[0].substring(0, url[0].length - 1), (u, data) => {
           item.content.text = item.content.text.replace(u, data)
         })
       })
