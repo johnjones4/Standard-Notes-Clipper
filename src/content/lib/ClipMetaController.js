@@ -5,8 +5,25 @@ export default class ClipMetaController extends ClipperControlBoxController {
     super()
     this.content = content
     this.tags = tags
+    this.tagsAndSubTags = this.createSubTags(tags)
     this.editors = editors
     this.initElement()
+  }
+
+  createSubTags (tags) {
+    const allSubTags = []
+    tags.forEach((tag, i) => {
+      const subTags = tag.split('.')
+      subTags.forEach((subTag, depth) => {
+        allSubTags.push({
+          searchText: subTag.toLowerCase(),
+          realTag: tag,
+          depth
+        })
+      })
+    })
+    allSubTags.sort((a, b) => a - b)
+    return allSubTags
   }
 
   initElement () {
@@ -125,7 +142,7 @@ export default class ClipMetaController extends ClipperControlBoxController {
         this.tagsSuggestionContainer.appendChild(tagButton)
       }
 
-      const suggestions = this.tags.filter(tag => tag.toLowerCase().indexOf(tagText.toLowerCase()) === 0)
+      const suggestions = this.findTagSuggestions(tagText.toLowerCase())
       suggestions.forEach(tag => addTagOption(tag, tag))
 
       const noPerfectMatches = this.tags.findIndex(tag => tag.toLowerCase() === tagText.toLowerCase()) < 0
@@ -133,5 +150,11 @@ export default class ClipMetaController extends ClipperControlBoxController {
         addTagOption(`Create new tag "${tagText}"`, tagText)
       }
     }
+  }
+
+  findTagSuggestions (lowerCaseTagText) {
+    return this.tagsAndSubTags
+      .filter(tag => tag.searchText.indexOf(lowerCaseTagText) === 0)
+      .map(tag => tag.realTag)
   }
 }
