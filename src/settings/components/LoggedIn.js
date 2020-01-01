@@ -19,7 +19,8 @@ export default class LoggedIn extends Component {
     this.setState({
       editors,
       preferredEditor: preferredEditor ? preferredEditor.uuid : null,
-      isContextMenuEnabled: chrome.extension.getBackgroundPage().isContextMenuEnabled()
+      isContextMenuEnabled: chrome.extension.getBackgroundPage().isContextMenuEnabled(),
+      isInlineImagesEnabled: chrome.extension.getBackgroundPage().isInlineImagesEnabled()
     })
   }
 
@@ -41,6 +42,17 @@ export default class LoggedIn extends Component {
     }
     this.setState({
       isContextMenuEnabled: chrome.extension.getBackgroundPage().isContextMenuEnabled()
+    })
+  }
+
+  async toggleInlineImages (newState) {
+    if (newState) {
+      await chrome.extension.getBackgroundPage().enableInlineImages()
+    } else {
+      await chrome.extension.getBackgroundPage().disableInlineImages()
+    }
+    this.setState({
+      isInlineImagesEnabled: chrome.extension.getBackgroundPage().isInlineImagesEnabled()
     })
   }
 
@@ -71,6 +83,16 @@ export default class LoggedIn extends Component {
     )
   }
 
+  renderInlineImagesSetting () {
+    return (
+      <div className='form-group'>
+        <label className='checkbox'>
+          <input type='checkbox' className='checkbox' name='inlineImages' checked={this.state.isInlineImagesEnabled} onChange={(event) => this.toggleInlineImages(event.target.checked)} /> Save Images Inline
+        </label>
+      </div>
+    )
+  }
+
   render () {
     return (
       <div className='col-lg-10'>
@@ -79,6 +101,7 @@ export default class LoggedIn extends Component {
           <legend>Settings</legend>
           { this.renderEditorSetting() }
           { this.renderContextMenuSetting() }
+          { this.renderInlineImagesSetting() }
         </fieldset>
         <hr />
         <button className='btn btn-danger' onClick={() => this.logout()}>Logout</button>

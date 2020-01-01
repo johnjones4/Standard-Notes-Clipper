@@ -8,7 +8,30 @@ import {
 } from './editorManager'
 import _ from 'lodash'
 
+export const generateDataUri = async (url, callback) => {
+  var image = new Image()
+  image.onload = function () {
+    var canvas = document.createElement('canvas')
+    canvas.width = this.naturalWidth
+    canvas.height = this.naturalHeight
+    canvas.getContext('2d').drawImage(this, 0, 0)
+    callback(url, canvas.toDataURL('image/png'))
+  }
+  let formattedUrl = (url.substring(0, 2) === '//' ? 'https:' : '') + url
+  if (formattedUrl.substring(0, 1) === '/') {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0]
+      const urlInfo = new URL(tab.url)
+      formattedUrl = urlInfo.origin + formattedUrl
+      image.src = formattedUrl
+    })
+  } else {
+    image.src = formattedUrl
+  }
+}
+
 export const saveClipping = async (baseContent) => {
+  const _inlineImages = chrome.extension.getBackgroundPage().isInlineImagesEnabled()
   const item = new SFItem({
     content: Object.assign({}, baseContent, {
       appData: {}
@@ -34,6 +57,19 @@ export const saveClipping = async (baseContent) => {
   })
 
   const SFJS = new StandardFile()
+
+  if (_inlineImages) {
+    const matchImages = /img.*?((http|\/).*?(png|jpg|jpeg|gif))["|']/gim
+    const imageReferences = item.content.text.match(matchImages)
+    if (imageReferences != null) {
+      imageReferences.forEach((i) => {
+        const url = i.match(/((http|\/).*?(png|jpg|jpeg|gif))["|']/gim)
+        generateDataUri(url[0].substring(0, url[0].length - 1), (u, data) => {
+          item.content.text = item.content.text.replace(u, data)
+        })
+      })
+    }
+  }
 
   const items = await Promise.all([
     // eslint-disable-next-line camelcase

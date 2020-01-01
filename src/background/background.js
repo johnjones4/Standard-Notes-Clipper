@@ -25,6 +25,11 @@ import {
   disableContextMenu,
   isContextMenuEnabled
 } from './lib/contextMenuManager'
+import {
+  enableInlineImages,
+  disableInlineImages,
+  isInlineImagesEnabled
+} from './lib/inlineImagesManager'
 import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 
@@ -35,6 +40,9 @@ window.setPreferredEditor = setPreferredEditor
 window.isContextMenuEnabled = isContextMenuEnabled
 window.enableContextMenu = enableContextMenu
 window.disableContextMenu = disableContextMenu
+window.isInlineImagesEnabled = isInlineImagesEnabled
+window.enableInlineImages = enableInlineImages
+window.disableInlineImages = disableInlineImages
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === contextMenuId) {
@@ -154,12 +162,22 @@ const setupContextMenu = async () => {
   }
 }
 
+const setupInlineImages = async () => {
+  const { inlineImages } = await chromeGetPromise({
+    inlineImages: true
+  })
+  if (inlineImages) {
+    enableInlineImages()
+  }
+}
+
 const initializeAddon = async () => {
   const items = await checkForUser()
   if (items && items.token) {
     syncInfo()
   }
   await setupContextMenu()
+  await setupInlineImages()
 }
 
 initializeAddon()
