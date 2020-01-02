@@ -221,7 +221,6 @@ const updateItemContentTextFormatting = (editor, item) => {
 }
 
 const formatText = (from, to, text) => {
-  console.log(from, to)
   if (to === from || from === 'plaintext' || (to === 'plaintext' && from === 'markdown')) {
     return text
   } else if (to === 'html' && from === 'markdown') {
@@ -233,4 +232,5 @@ const formatText = (from, to, text) => {
   } else if (to === 'plaintext' && from === 'html') {
     return htmlToText.fromString(text)
   }
+  return text
 }
