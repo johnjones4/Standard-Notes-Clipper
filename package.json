@@ -52,11 +52,14 @@
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "html-to-text": "^5.1.1",
+    "markdown-it": "^10.0.0",
     "preact": "^10.0.1",
     "preact-render-to-string": "^5.1.0",
     "preact-router": "^3.0.0",
     "regenerator-runtime": "^0.13.3",
     "sanitize-html": "^1.20.1",
-    "standard-file-js": "^0.3.71"
+    "standard-file-js": "^0.3.71",
+    "turndown": "^5.0.3"
   }
 }

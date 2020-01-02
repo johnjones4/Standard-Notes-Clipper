@@ -31,3 +31,26 @@ export const setPreferredEditor = (editorUUID) => {
     preferredEditor: editorUUID
   })
 }
+
+export const getFormatForEditor = (editor) => {
+  if (!editor) {
+    return 'plaintext'
+  }
+  switch (editor.content.name) {
+    case 'Advanced Markdown Editor':
+    case 'Simple Markdown Editor':
+    case 'Minimal Markdown Editor':
+      return 'markdown'
+    case 'Bold Editor':
+    case 'Plus Editor':
+      return 'html'
+    case 'Simple Task Editor':
+    case 'Code Editor':
+    case 'Math Editor':
+    case 'Vim Editor':
+    case 'Secure Spreadsheets':
+      return 'plaintext'
+    default:
+      return 'plaintext'
+  }
+}

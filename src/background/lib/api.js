@@ -4,9 +4,13 @@ import {
   snRequest
 } from './util'
 import {
-  getPreferredEditor
+  getPreferredEditor,
+  getFormatForEditor
 } from './editorManager'
 import _ from 'lodash'
+import TurndownService from 'turndown'
+import htmlToText from 'html-to-text'
+import MarkdownIt from 'markdown-it'
 
 export const saveClipping = async (baseContent) => {
   const item = new SFItem({
@@ -27,6 +31,8 @@ export const saveClipping = async (baseContent) => {
       prefersPlainEditor: false
     }
   }
+
+  updateItemContentTextFormatting(editor, item)
 
   const { params, keys } = await chromeGetPromise({
     params: {},
@@ -106,11 +112,13 @@ export const updateClipping = async (item, itemTags, editorUUID) => {
       item.content.appData['org.standardnotes.sn'] = {
         prefersPlainEditor: false
       }
+      updateItemContentTextFormatting(editor, item)
       saveItems.push(editor)
     } else {
       item.content.appData['org.standardnotes.sn'] = {
         prefersPlainEditor: true
       }
+      updateItemContentTextFormatting(null, item)
     }
     if (oldEditorUUID) {
       const oldEditor = new SFItem(editors[oldEditorUUID])
@@ -198,5 +206,31 @@ export const fetchItems = async (keys, syncToken, cursorToken, tags, editors) =>
       editors,
       syncToken: response.sync_token
     }
+  }
+}
+
+const updateItemContentTextFormatting = (editor, item) => {
+  const preferredFormat = getFormatForEditor(editor)
+  if (item.content.text !== preferredFormat) {
+    const currentFormat = item.content.appData['org.standardnotes.clipper'] ? item.content.appData['org.standardnotes.clipper'].contentType : 'html'
+    item.content.text = formatText(currentFormat, preferredFormat, item.content.text)
+  }
+  item.content.appData['org.standardnotes.clipper'] = {
+    contentType: preferredFormat
+  }
+}
+
+const formatText = (from, to, text) => {
+  console.log(from, to)
+  if (to === from || from === 'plaintext' || (to === 'plaintext' && from === 'markdown')) {
+    return text
+  } else if (to === 'html' && from === 'markdown') {
+    const md = new MarkdownIt()
+    return md.render(text)
+  } else if (to === 'markdown' && from === 'html') {
+    const turndownService = new TurndownService()
+    return turndownService.turndown(text)
+  } else if (to === 'plaintext' && from === 'html') {
+    return htmlToText.fromString(text)
   }
 }
