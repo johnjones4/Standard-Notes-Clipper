@@ -70,7 +70,7 @@ export default class Login extends Component {
           </div>
         </form>
         <p className='security-disclaimer text-muted'>
-          <small>Your login credentials and 2FA code (when applicable) are <a href="https://docs.standardnotes.org/specification/encryption">processed locally</a> before sending directly to the Standard Notes server at sync.standardnotes.org. This add-on only stores an encryption/decryption key and the authentication token data sent back from the server to make future requests. This add-on also does not store any note data - only editor and tag data.</small>
+          <small>Only a password <a href="https://docs.standardnotes.org/specification/encryption">generated locally from your credentials</a> will be sent, directly to the Standard Notes server at sync.standardnotes.org. This add-on only stores encryption/decryption keys and the authentication token data sent back from the server to preserve the login status. This add-on also does not store any note data - only editor and tag data.</small>
         </p>
       </div>
     )
