@@ -1,6 +1,6 @@
 # Standard Notes Clipper
 
-[![Build Status](https://travis-ci.org/johnjones4/Standard-Notes-Clipper.svg?branch=master)](https://travis-ci.org/johnjones4/Standard-Notes-Clipper)
+[![Build Status](https://api.travis-ci.org/johnjones4/Standard-Notes-Clipper.svg?branch=master)](https://travis-ci.org/johnjones4/Standard-Notes-Clipper)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ![Add-on Preview](preview.gif)
