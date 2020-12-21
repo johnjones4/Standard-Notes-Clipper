@@ -153,7 +153,8 @@ export const fetchItems = async (keys, syncToken, cursorToken, tags, editors) =>
   const response = await snRequest(true, 'items/sync', 'POST', {
     items: [],
     sync_token: syncToken,
-    cursor_token: cursorToken
+    cursor_token: cursorToken,
+    api: '20200115'
   })
 
   const newTags = []

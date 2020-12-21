@@ -29,8 +29,8 @@ const _module = {
       use: [{
         loader: 'style-loader' // creates style nodes from JS strings
       }, {
-        loader: 'css-loader' // translates CSS into CommonJS
-      }]
+        loader: 'css-loader' // translates CSS into CommonJS,
+      }],
     }
   ]
 }
@@ -90,18 +90,6 @@ module.exports = [
       filename: path.join('content', 'content.js')
     },
     resolve: _resolve,
-    module: _module
-  },
-  {
-    devtool: 'source-map',
-    entry: [
-      path.resolve(__dirname, 'src', 'content', 'content.css')
-    ],
-    output: {
-      // build to the extension src vendor directory
-      path: path.resolve(__dirname, 'build'),
-      filename: path.join('content', 'content.css')
-    },
     module: _module
   }
 ]
