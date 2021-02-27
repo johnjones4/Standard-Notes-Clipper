@@ -18,20 +18,20 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm run package-firefox
-        if: contains(github.ref, "release")
+        if: github.event_name == 'release' && github.event.action == 'created'
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
           WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
       - run: npm run package-chrome
-        if: contains(github.ref, "release")
+        if: github.event_name == 'release' && github.event.action == 'created'
       - uses: djnicholson/release-action@v2.11
-        if: contains(github.ref, "release")
+        if: github.event_name == 'release' && github.event.action == 'created'
         with:
           token: ${{ secrets.GH_TOKEN }}
           asset-name: 'firefox.xpi'
           file: 'web-ext-artifacts/firefox.xpi'
       - uses: djnicholson/release-action@v2.11
-        if: contains(github.ref, "release")
+        if: github.event_name == 'release' && github.event.action == 'created'
         with:
           token: ${{ secrets.GH_TOKEN }}
           asset-name: 'chrome.zip'
