@@ -58,7 +58,7 @@
     "preact-render-to-string": "^5.1.0",
     "preact-router": "^3.0.0",
     "regenerator-runtime": "^0.13.3",
-    "sanitize-html": "^1.20.1",
+    "sanitize-html": "^2.3.2",
     "standard-file-js": "^0.3.71",
     "turndown": "^5.0.3"
   }
